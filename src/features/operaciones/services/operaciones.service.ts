@@ -1,0 +1,34 @@
+// src/features/operaciones/services/operaciones.service.ts
+import { getAuthHeaders } from "@/api/apiClient";
+import { ENV } from "@/config/env";
+import { OperacionDetalle } from "../types";
+
+export const OperacionesService = {
+  // Obtener operaciones por correo
+  getOperations: async (email: string): Promise<OperacionDetalle[]> => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${ENV.API_OPERACIONES}/operaciones/${email}`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Error ${response.status}: ${errorText}`);
+    }
+
+    return response.json();
+  },
+
+  // Obtener facturas de una operación específica
+  getFacturasByOperation: async (idOperacion: string) => {
+    const headers = await getAuthHeaders();
+    const response = await fetch(`${ENV.API_OPERACIONES}/operaciones/facturas/${idOperacion}`, {
+      method: "GET",
+      headers,
+    });
+
+    if (!response.ok) throw new Error("Error al obtener facturas");
+    return response.json();
+  }
+};
