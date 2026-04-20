@@ -1,7 +1,7 @@
 // src/features/operaciones/hooks/useOperaciones.ts
 import { useState, useEffect } from 'react';
 import { OperacionesService } from '../services/operaciones.service';
-import { OperacionDetalle } from '../types';
+import type { OperacionDetalle } from '@/features/operaciones/types';
 
 export function useMisOperaciones(email?: string) {
   const [operaciones, setOperaciones] = useState<OperacionDetalle[]>([]);

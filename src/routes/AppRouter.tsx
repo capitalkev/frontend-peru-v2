@@ -6,6 +6,7 @@ import { type Route as SidebarRoute } from "@/components/layout/Sidebar";
 
 // Importa tus nuevas páginas aquí
 import { ListaOperacionesPage } from "@/pages/operaciones/ListarOperacionesPage";
+import { NewOperationPage } from "@/pages/nueva-operacion/NewOperationPage";
 //import { OperationDetailPage } from "@/pages/operaciones/OperationDetailPage";
 //import { NewOperationView } from "@/pages/nueva-operacion/NewOperationView";
 //import { EnvioCartasView } from "@/pages/envio-cartas/EnvioCartasView";
@@ -49,9 +50,10 @@ export function AppRouter() {
             <Outlet />
           </Layout>
         }>
+          <Route path="/" element={<Navigate to="/operaciones" replace />} />
           <Route path="/operaciones" element={<ListaOperacionesPage />} />
+          <Route path="/nueva-operacion" element={<NewOperationPage />} />
           {/* <Route path="/operacion/:id" element={<OperationDetailPage />} /> */}
-          {/* <Route path="/nueva-operacion" element={<NewOperationView onFinish={() => navigate("/operaciones")} />} /> */}
           {/* <Route path="/envio-cartas" element={<EnvioCartasView />} /> */}
           {/* <Route path="/sunat" element={<SunatView />} /> */}
           {/* <Route path="/perfil" element={<ProfilePage />} /> */}

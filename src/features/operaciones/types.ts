@@ -9,6 +9,7 @@ export interface OperacionDetalle {
   moneda_sumatoria: string;
   monto_sumatoria_total: number;
   fecha_creacion: string;
+  estado: string;
 }
 
 export interface StatusConfig {

@@ -37,7 +37,11 @@ export function LoginPage() {
         <div className="w-full max-w-[400px]">
           <div className="mb-12 text-center lg:text-left">
             <div className="text-3xl font-extrabold tracking-tight mb-8">
-              <img src="/src/assets/capitalexpress.png" alt="Logo" className="h-8" />
+              <img
+                src="/src/assets/capitalexpress.png"
+                alt="Logo"
+                className="h-8"
+              />
             </div>
 
             <h1 className="text-4xl font-bold text-slate-900 mb-3 tracking-tight">

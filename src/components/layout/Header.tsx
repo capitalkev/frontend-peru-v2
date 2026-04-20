@@ -21,7 +21,7 @@ export function Header({ title }: HeaderProps) {
   const fullName = user?.displayName || "Usuario";
 
   return (
-    <header className="w-full h-16 px-6 flex items-center justify-between bg-white/80 backdrop-blur-md border-b border-slate-100/50">
+    <header className="w-full h-auto py-2 mb-4 flex items-center justify-between">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">
           {title || `${getGreeting()}, ${firstName}`}
