@@ -8,6 +8,8 @@ import { ListaOperacionesPage } from "@/pages/operaciones/ListarOperacionesPage"
 import { NewOperationPage } from "@/pages/nueva-operacion/NewOperationPage";
 import { EnvioCartasPage } from "@/pages/envio-cartas/EnvioCartasPage";
 import { SunatPage } from "@/pages/sunat/SunatPage";
+import { IAMPage } from "@/pages/iam/IAMPage";
+
 //import { ProfilePage } from "@/pages/perfil/ProfilePage";
 
 export function AppRouter() {
@@ -21,6 +23,7 @@ export function AppRouter() {
     if (path === '/envio-cartas') return "envio-cartas";
     if (path === '/sunat') return "sunat";
     if (path === '/perfil') return "profile";
+    if (path === '/iam') return "iam";
     return "dashboard";
   };
 
@@ -31,6 +34,7 @@ export function AppRouter() {
       "sunat": "/sunat",
       "profile": "/perfil",
       "envio-cartas": "/envio-cartas",
+      "iam": "/iam",
     };
     navigate(paths[route as keyof typeof paths] || "/");
   };
@@ -51,7 +55,7 @@ export function AppRouter() {
           <Route path="/nueva-operacion" element={<NewOperationPage />} />
           <Route path="/envio-cartas" element={<EnvioCartasPage />} />
           <Route path="/sunat" element={<SunatPage />} />
-          {/* <Route path="/sunat" element={<SunatView />} /> */}
+          <Route path="/iam" element={<IAMPage />} />
           {/* <Route path="/perfil" element={<ProfilePage />} /> */}
         </Route>
       </Route>

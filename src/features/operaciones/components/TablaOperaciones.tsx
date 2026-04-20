@@ -107,7 +107,7 @@ export function TablaOperaciones({
                   <p className="text-slate-500 font-medium">
                     No hay operaciones para mostrar
                   </p>
-                  <p className="text-slate-400 text-sm mt-1">
+                  <p className="text-slate-400 text-xs mt-1">
                     Carga una nueva operación para comenzar.
                   </p>
                 </td>
@@ -128,7 +128,7 @@ export function TablaOperaciones({
                   >
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1.5">
-                        <span className="text-sm font-semibold text-slate-900 leading-tight">
+                        <span className="text-xs font-semibold text-slate-900 leading-tight">
                           {op.nombre_cliente}
                         </span>
                         <span className="text-xs font-medium text-slate-500">
@@ -138,18 +138,18 @@ export function TablaOperaciones({
                     </td>
                     
                     {isAdmin && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-xs text-slate-600">
                         {op.nombre_ejecutivo || "Sin Asignar"}
                       </td>
                     )}
 
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-900 text-sm">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-900 text-xs">
                       {op.moneda_sumatoria} {op.monto_sumatoria_total?.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                     </td>
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col gap-1">
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-xs font-medium text-slate-700">
                           {new Date(op.fecha_creacion).toLocaleDateString('es-PE')}
                         </span>
                         <span className="text-xs text-slate-400">

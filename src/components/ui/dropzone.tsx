@@ -103,7 +103,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
           >
             {label}
           </p>
-          {!small && <p className="text-sm text-slate-500">{sublabel}</p>}
+          {!small && <p className="text-xs text-slate-500">{sublabel}</p>}
         </div>
       </div>
     );

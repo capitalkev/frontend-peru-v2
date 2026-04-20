@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import type { SunatMetrics } from "../types";
+import type { SunatTotales } from "../types";
 
 const formatCurrency = (value: number, currency: "PEN" | "USD") => {
   return new Intl.NumberFormat("es-PE", { style: "currency", currency }).format(
@@ -7,11 +7,11 @@ const formatCurrency = (value: number, currency: "PEN" | "USD") => {
   );
 };
 
-export function KPIDashboard({
-  metrics,
+export function ResumenDashboard({
+  totales,
   loading,
 }: {
-  metrics: SunatMetrics;
+  totales: SunatTotales;
   loading?: boolean;
 }) {
   if (loading) {
@@ -35,11 +35,11 @@ export function KPIDashboard({
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
             Total Facturado (PEN)
           </p>
-          <h3 className="text-3xl font-extrabold text-slate-900 truncate">
-            {formatCurrency(metrics.PEN.totalFacturado, "PEN")}
+          <h3 className="text-2xl font-extrabold font-mono text-slate-900 truncate">
+            {formatCurrency(totales.PEN.totalFacturado, "PEN")}
           </h3>
-          <p className="text-sm font-medium text-slate-400 mt-2">
-            {metrics.PEN.cantidad} facturas en el periodo
+          <p className="text-xs font-medium text-slate-400 mt-2">
+            {totales.PEN.cantidad} facturas en el periodo
           </p>
         </CardContent>
       </Card>
@@ -50,11 +50,11 @@ export function KPIDashboard({
           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
             Total Facturado (USD)
           </p>
-          <h3 className="text-3xl font-extrabold text-slate-900 truncate">
-            {formatCurrency(metrics.USD.totalFacturado, "USD")}
+          <h3 className="text-2xl font-extrabold font-mono text-slate-900 truncate">
+            {formatCurrency(totales.USD.totalFacturado, "USD")}
           </h3>
-          <p className="text-sm font-medium text-slate-400 mt-2">
-            {metrics.USD.cantidad} facturas en el periodo
+          <p className="text-xs font-medium text-slate-400 mt-2">
+            {totales.USD.cantidad} facturas en el periodo
           </p>
         </CardContent>
       </Card>

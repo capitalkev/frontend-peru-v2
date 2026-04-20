@@ -8,10 +8,20 @@ import {
 import { Hub } from "aws-amplify/utils";
 import { jwtDecode } from "jwt-decode";
 import { ALLOWED_EMAIL_DOMAINS } from "@/config/constants";
+import { AVAILABLE_ROLES } from "@/features/iam/types";
 import { AuthContext, type AuthUser } from "./AuthContext";
 
+type AmplifyUser = Awaited<ReturnType<typeof getCurrentUser>>;
+
+type IdTokenClaims = {
+  email?: string;
+  name?: string;
+  "cognito:groups"?: string[];
+  [key: string]: unknown;
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<AmplifyUser | null>(null);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,8 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!token) throw new Error("No token found");
 
-        const decoded: any = jwtDecode(token);
-        const email = decoded.email || "";
+        const decoded = jwtDecode<IdTokenClaims>(token);
+        const email = typeof decoded.email === "string" ? decoded.email : "";
         const domain = email.split("@")[1];
 
         if (!ALLOWED_EMAIL_DOMAINS.includes(domain)) {
@@ -35,22 +45,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        const groups = decoded["cognito:groups"] || [];
-        const validGroups = groups.filter(
-          (g: string) => !g.endsWith("_google") && !g.includes("us-east-1"),
-        );
-        const rol =
-          validGroups.length > 0 ? validGroups[0] : "Sin rol asignado";
+        const groupsClaim = decoded["cognito:groups"];
+        const groups: string[] = Array.isArray(groupsClaim)
+          ? groupsClaim
+          : [];
+
+        const validGroups = groups
+          .filter((g) => !g.endsWith("_google") && !g.includes("us-east-1"))
+          .filter((g) => (AVAILABLE_ROLES as readonly string[]).includes(g));
+
+        const rol = validGroups.length > 0 ? validGroups[0] : "sin_asignar";
 
         const authUserData: AuthUser = {
           email,
-          nombre: decoded.name || "",
+          nombre: typeof decoded.name === "string" ? decoded.name : "",
           rol,
         };
 
         setAuthUser(authUserData);
         setUser(currentUser);
-      } catch (error) {
+      } catch (error: unknown) {
+        console.error(error);
         setUser(null);
         setAuthUser(null);
       } finally {

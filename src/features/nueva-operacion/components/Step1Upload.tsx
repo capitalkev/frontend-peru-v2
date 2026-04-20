@@ -39,7 +39,7 @@ export function Step1Upload({
         {xmlFiles.length > 0 && !isExtracting && (
           <div className="mt-6">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-sm font-medium text-slate-700">
+              <h4 className="text-xs font-medium text-slate-700">
                 Archivos Cargados ({xmlFiles.length}):
               </h4>
             </div>
@@ -49,7 +49,7 @@ export function Step1Upload({
                   key={index}
                   className="flex items-center justify-between bg-slate-50 p-2.5 rounded-lg border border-slate-200 group"
                 >
-                  <div className="flex items-center gap-3 text-sm text-slate-600 overflow-hidden">
+                  <div className="flex items-center gap-3 text-xs text-slate-600 overflow-hidden">
                     <FileText className="h-4 w-4 text-brand-500 shrink-0" />
                     <span className="truncate">{file.name}</span>
                   </div>
@@ -75,7 +75,7 @@ export function Step1Upload({
           <div className="mt-6 rounded-xl border border-rose-200 bg-rose-50/80 shadow-sm overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
             <div className="flex items-center gap-2.5 px-4 py-3 bg-rose-100/50 border-b border-rose-100">
               <AlertCircle className="h-5 w-5 text-rose-600" />
-              <h3 className="text-sm font-bold text-rose-800">
+              <h3 className="text-xs font-bold text-rose-800">
                 No se puede continuar. Hay problemas con los siguientes
                 archivos:
               </h3>
@@ -86,7 +86,7 @@ export function Step1Upload({
                 {error.split("\n").map((err, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start gap-2.5 text-sm text-rose-700 font-medium"
+                    className="flex items-start gap-2.5 text-xs text-rose-700 font-medium"
                   >
                     <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0"></span>
                     <span className="leading-snug">{err}</span>

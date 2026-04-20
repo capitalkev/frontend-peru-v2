@@ -109,7 +109,7 @@ const EmailInput = React.forwardRef<HTMLDivElement, EmailInputProps>(
               onKeyDown={handleKeyDown}
               onBlur={addEmail}
               placeholder={placeholder}
-              className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400 text-slate-700 min-w-[200px]"
+              className="flex-1 bg-transparent text-xs outline-none placeholder:text-slate-400 text-slate-700 min-w-[200px]"
               disabled={disabled}
             />
           </div>

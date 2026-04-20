@@ -36,7 +36,7 @@ export function LoginPage() {
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 relative z-10">
         <div className="w-full max-w-[400px]">
           <div className="mb-12 text-center lg:text-left">
-            <div className="text-3xl font-extrabold tracking-tight mb-8">
+            <div className="text-2xl font-extrabold tracking-tight mb-8">
               <img
                 src="/src/assets/capitalexpress.png"
                 alt="Logo"
@@ -55,7 +55,7 @@ export function LoginPage() {
           {errorParam === "domain" && (
             <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
               <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-red-800">
+              <p className="text-xs text-red-800">
                 El correo <b>@{domainParam}</b> no está autorizado. Por favor,
                 usa tu cuenta corporativa.
               </p>

@@ -26,7 +26,7 @@ export function Header({ title }: HeaderProps) {
         <h1 className="text-2xl font-bold text-slate-900">
           {title || `${getGreeting()}, ${firstName}`}
         </h1>
-        <p className="text-sm text-slate-500 hidden md:block">
+        <p className="text-xs text-slate-500 hidden md:block">
           Bienvenido de nuevo a tu panel financiero.
         </p>
       </div>
@@ -37,7 +37,7 @@ export function Header({ title }: HeaderProps) {
           <input
             type="text"
             placeholder="Buscar operación..."
-            className="h-10 w-64 rounded-full bg-slate-100 border-none pl-10 pr-4 text-sm focus:ring-2 focus:ring-brand-500 outline-none transition-all"
+            className="h-10 w-64 rounded-full bg-slate-100 border-none pl-10 pr-4 text-xs focus:ring-2 focus:ring-brand-500 outline-none transition-all"
           />
         </div>
 
@@ -54,7 +54,7 @@ export function Header({ title }: HeaderProps) {
         {/* Perfil */}
         <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
           <div className="text-right hidden md:block">
-            <p className="text-sm font-semibold text-slate-900">{fullName}</p>
+            <p className="text-xs font-semibold text-slate-900">{fullName}</p>
           </div>
           <div className="h-10 w-10 rounded-full bg-brand-50 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden shrink-0">
             {user?.photoURL ? (

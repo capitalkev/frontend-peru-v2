@@ -6,7 +6,7 @@ import { LayoutGrid, List, AlertTriangle, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 
 // Importaciones del feature
-import { KPIDashboard } from "@/features/sunat/components/KPIDashboard";
+import { ResumenDashboard } from "@/features/sunat/components/ResumenDashboard";
 import {
   ClientFilter,
   CurrencyFilter,
@@ -44,7 +44,7 @@ export function SunatPage() {
     users.length,
   );
 
-  const { ventas, metrics, pagination, loading, error } = useSunatData(
+  const { ventas, totales, pagination, loading, error } = useSunatData(
     isAuthenticated,
     dateFilter,
     selectedClientIds,
@@ -115,7 +115,7 @@ export function SunatPage() {
             <h2 className="text-xl font-bold text-rose-900 mb-2">
               Error de Conexión
             </h2>
-            <p className="text-rose-700 font-medium mb-6 text-sm">
+            <p className="text-rose-700 font-medium mb-6 text-xs">
               {error.includes("Failed to fetch")
                 ? "No se pudo conectar con el servidor de SUNAT. Verifica tu conexión."
                 : error}
@@ -138,8 +138,8 @@ export function SunatPage() {
 
       {/* KPIs con soporte de loading/skeleton */}
       <div className="shrink-0 mt-2">
-        <KPIDashboard
-          metrics={metrics}
+        <ResumenDashboard
+          totales={totales}
           loading={loading && ventas.length === 0}
         />
       </div>

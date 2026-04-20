@@ -5,19 +5,23 @@ const handleResponse = async (response: Response) => {
   if (!response.ok) {
     throw new Error(`Error del servidor: ${response.status}`);
   }
-  
+
   const text = await response.text();
   try {
-    return JSON.parse(text); // Intentamos parsear el JSON
+    return JSON.parse(text);
   } catch (e) {
-    throw new Error("El servidor está apagado o no devolvió una respuesta válida.");
+    throw new Error(
+      "El servidor está apagado o no devolvió una respuesta válida.",
+    );
   }
 };
 
 export const SunatService = {
   getUsers: async () => {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${ENV.API_IAM}/api/admin/usuarios/`, { headers });
+    const response = await fetch(`${ENV.API_IAM}/api/admin/usuarios/`, {
+      headers,
+    });
     return handleResponse(response);
   },
 
@@ -30,10 +34,10 @@ export const SunatService = {
     return handleResponse(response);
   },
 
-  getMetrics: async (queryString: string) => {
+  getResumen: async (queryString: string) => {
     const headers = await getAuthHeaders();
     const response = await fetch(
-      `${ENV.SUNAT_API_URL}/api/metricas/resumen?${queryString}`,
+      `${ENV.SUNAT_API_URL}/api/ventas/resumen?${queryString}`,
       { headers },
     );
     return handleResponse(response);

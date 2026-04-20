@@ -42,7 +42,7 @@ const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
 
         {label && (
           <span
-            className="text-sm font-medium text-slate-700 select-none cursor-pointer"
+            className="text-xs font-medium text-slate-700 select-none cursor-pointer"
             onClick={() => onCheckedChange(!checked)}
           >
             {label}

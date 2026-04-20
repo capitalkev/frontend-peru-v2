@@ -1,11 +1,11 @@
-export interface SunatMetricsCurrency {
+export interface SunatTotalesCurrency {
   totalFacturado: number;
   cantidad: number;
 }
 
-export interface SunatMetrics {
-  PEN: SunatMetricsCurrency;
-  USD: SunatMetricsCurrency;
+export interface SunatTotales {
+  PEN: SunatTotalesCurrency;
+  USD: SunatTotalesCurrency;
 }
 
 export interface Invoice {

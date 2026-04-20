@@ -46,7 +46,7 @@ export function Step1Upload({
 
         {excelFile && (
           <div className="flex items-center justify-between bg-emerald-50 p-3 rounded-lg border border-emerald-100">
-            <div className="flex items-center gap-3 text-sm text-emerald-800">
+            <div className="flex items-center gap-3 text-xs text-emerald-800">
               <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
               <span className="font-medium">{excelFile.name}</span>
               <span className="text-emerald-600/70 text-xs">
@@ -63,7 +63,7 @@ export function Step1Upload({
         )}
 
         <div className="space-y-2 bg-slate-50 p-5 rounded-xl border border-slate-200">
-          <label className="text-sm font-semibold text-slate-800 block">
+          <label className="text-xs font-semibold text-slate-800 block">
             Filtrar Fecha Ingreso Desde{" "}
             <span className="text-brand-600">*</span>
           </label>

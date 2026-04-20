@@ -275,7 +275,7 @@ export function NewOperationPage() {
               >
                 <div
                   className={cn(
-                    "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2",
+                    "h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2",
                     step >= s
                       ? "bg-brand-600 border-brand-600 text-white shadow-lg shadow-brand-200"
                       : "bg-white border-slate-300 text-slate-400",

@@ -12,10 +12,10 @@ export function DetailedTable({ invoices, loading }: { invoices: Invoice[]; load
     <table className="w-full text-left border-collapse min-w-[800px]">
       <thead>
         <tr className="border-b border-slate-200 bg-slate-50/50">
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Factura</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente / Deudor</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Monto</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Emisión</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Factura</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente / Deudor</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Monto</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Emisión</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-slate-100">
@@ -42,24 +42,24 @@ export function DetailedTable({ invoices, loading }: { invoices: Invoice[]; load
             const isZeroAmount = inv.montoNeto === 0;
             return (
               <tr key={inv.key} className={cn("hover:bg-slate-50/50 transition-colors", isZeroAmount && "opacity-50 bg-slate-50")}>
-                <td className="px-4 py-3 whitespace-nowrap">
-                  <span className="text-sm font-medium text-slate-700">{inv.id}</span>
+                <td className="px-4 py-2 whitespace-nowrap">
+                  <span className="text-xs font-medium text-slate-700">{inv.id}</span>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-2">
                   <div className="flex flex-col leading-tight">
-                    <span className="text-sm font-medium text-slate-800">{inv.clientName}</span>
+                    <span className="text-xs font-medium text-slate-800">{inv.clientName}</span>
                     <span className="text-xs text-slate-500 truncate max-w-[300px]">{inv.debtor}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap">
-                  <span className="text-sm font-mono font-medium text-slate-700">
+                <td className="px-4 py-2 whitespace-nowrap">
+                  <span className="text-xs font-mono font-medium text-slate-700">
                     {formatCurrency(inv.amount, inv.currency)}
                   </span>
                   {isZeroAmount && (
                     <span className="ml-2 text-[10px] font-medium text-slate-500 uppercase bg-slate-200 px-1.5 py-0.5 rounded">Anulada</span>
                   )}
                 </td>
-                <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-500">
+                <td className="px-4 py-2 whitespace-nowrap text-xs text-slate-500">
                   {inv.emissionDate}
                 </td>
               </tr>
@@ -76,10 +76,10 @@ export function GroupedTable({ groups, expandedKey, onExpand, loading }: any) {
     <table className="w-full text-left border-collapse min-w-[800px]">
       <thead>
         <tr className="border-b border-slate-200 bg-slate-50/80">
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Deudor</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Facturas</th>
-          <th className="px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Monto Total</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Cliente</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Deudor</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">Facturas</th>
+          <th className="px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider text-right">Monto Total</th>
         </tr>
       </thead>
       <tbody>
@@ -102,15 +102,15 @@ export function GroupedTable({ groups, expandedKey, onExpand, loading }: any) {
                   className={cn("border-b border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer", isExpanded && "bg-brand-50/30")}
                   onClick={() => onExpand(group.key)}
                 >
-                  <td className="px-4 py-3 font-medium text-sm text-slate-800">{group.clientName}</td>
-                  <td className="px-4 py-3 text-slate-600 text-sm">{group.debtor}</td>
-                  <td className="px-4 py-3 text-center">
+                  <td className="px-4 py-2 font-medium text-xs text-slate-800">{group.clientName}</td>
+                  <td className="px-4 py-2 text-slate-600 text-xs">{group.debtor}</td>
+                  <td className="px-4 py-2 text-center">
                     <span className="bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-blue-100">
                       {group.invoiceCount}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono font-medium text-sm text-slate-800">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="px-4 py-2 text-right font-mono font-medium text-xs text-slate-800">
+                    <div className="flex items-center font-mono justify-end gap-2">
                       {formatCurrency(group.totalAmount, group.currency)}
                       {isExpanded ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
                     </div>
@@ -119,7 +119,7 @@ export function GroupedTable({ groups, expandedKey, onExpand, loading }: any) {
                 {isExpanded && (
                   <tr>
                     <td colSpan={4} className="p-0 border-b border-slate-200">
-                      <div className="bg-slate-50/80 px-6 py-3 shadow-inner">
+                      <div className="bg-slate-50/80 px-6 py-2 shadow-inner">
                         <table className="w-full text-left">
                           <thead>
                             <tr className="border-b border-slate-200">

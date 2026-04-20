@@ -149,7 +149,7 @@ export function EnvioCartasPage() {
             {[1, 2, 3].map((s) => (
               <div key={s} className="flex flex-col items-center gap-2 bg-[#f4f7fe] px-4">
                 <div className={cn(
-                  "h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 border-2",
+                  "h-10 w-10 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 border-2",
                   step >= s ? "bg-brand-600 border-brand-600 text-white shadow-lg shadow-brand-200" : "bg-white border-slate-300 text-slate-400"
                 )}>
                   {step > s ? <CheckCircle2 className="h-6 w-6" /> : s}

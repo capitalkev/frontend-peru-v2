@@ -28,7 +28,7 @@ export function Step3Send({ deudoresCount, carpetaDriveNombre, isSending, isSucc
             <p className="text-slate-600 text-lg mb-2">
               Estás a punto de procesar y enviar <strong className="text-slate-900 font-bold">{deudoresCount} cartas de cesión</strong>.
             </p>
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 max-w-md w-full text-sm text-slate-600 text-left space-y-2 mt-4">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 max-w-md w-full text-xs text-slate-600 text-left space-y-2 mt-4">
               <p className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" /> Los PDFs se enviarán por Gmail a los correos asignados.</p>
               <p className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" /> Se guardará un respaldo automático en Google Drive.</p>
               <p className="flex items-start gap-2">

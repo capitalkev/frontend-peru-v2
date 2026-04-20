@@ -43,20 +43,20 @@ export function Step3Closure({
   };
 
   // Clases compartidas para el foco personalizado de los selects
-  const selectClasses = "flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm transition-all duration-200 focus-visible:outline-none focus-visible:border-brand-500 focus-visible:ring-4 focus-visible:ring-brand-500/10";
+  const selectClasses = "flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs transition-all duration-200 focus-visible:outline-none focus-visible:border-brand-500 focus-visible:ring-4 focus-visible:ring-brand-500/10";
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-4">
           <CardTitle>Cierre y Envío</CardTitle>
-          <p className="text-slate-500 text-sm">Completa los últimos detalles para registrar la operación.</p>
+          <p className="text-slate-500 text-xs">Completa los últimos detalles para registrar la operación.</p>
         </CardHeader>
         
         <CardContent className="space-y-8">
           {/* Área de Comentario Mejorada */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+            <label className="text-xs font-medium text-slate-700 flex items-center gap-2">
               <MessageSquare className="h-4 w-4 text-brand-500" />
               Comentario de la Operación <span className="text-red-500">*</span>
             </label>
@@ -65,7 +65,7 @@ export function Step3Closure({
               value={comentario}
               onChange={(e) => setComentario(e.target.value)}
               className={cn(
-                "flex w-full min-h-[100px] resize-none rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-sm text-slate-700 transition-all duration-200",
+                "flex w-full min-h-[100px] resize-none rounded-xl border border-slate-200 bg-slate-50/50 p-3 text-xs text-slate-700 transition-all duration-200",
                 "placeholder:text-slate-400",
                 "focus-visible:bg-white focus-visible:outline-none focus-visible:border-brand-500 focus-visible:ring-4 focus-visible:ring-brand-500/10"
               )}
@@ -74,7 +74,7 @@ export function Step3Closure({
 
           {/* Respaldos Adicionales */}
           <div className="pt-2 border-t border-slate-100">
-            <label className="text-sm font-medium text-slate-700 mb-2 block">Documentos Adicionales (Opcional)</label>
+            <label className="text-xs font-medium text-slate-700 mb-2 block">Documentos Adicionales (Opcional)</label>
             <Dropzone 
               onDrop={(acceptedFiles) => setAdditionalDocs(prev => [...prev, ...acceptedFiles])}
               label="Adjuntos de respaldo" 
@@ -122,7 +122,7 @@ export function Step3Closure({
                   className="overflow-hidden"
                 >
                   <div className="pt-2">
-                    <label className="text-sm font-medium text-slate-700 mb-1 block">Porcentaje Solicitado</label>
+                    <label className="text-xs font-medium text-slate-700 mb-1 block">Porcentaje Solicitado</label>
                     <Input 
                       value={advancePercent} 
                       onChange={(e) => setAdvancePercent(e.target.value)}
@@ -136,7 +136,7 @@ export function Step3Closure({
 
           {/* Cuenta Bancaria */}
           <div className="space-y-4">
-            <label className="text-sm font-medium text-slate-700">Cuenta de Desembolso *</label>
+            <label className="text-xs font-medium text-slate-700">Cuenta de Desembolso *</label>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="space-y-2">
                 <select value={bank} onChange={(e) => setBank(e.target.value)} className={selectClasses}>
@@ -180,7 +180,7 @@ export function Step3Closure({
             </div>
           </div>
           {error && (
-            <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm relative mt-4" role="alert">
+            <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-xs relative mt-4" role="alert">
               <strong className="font-bold">Aviso: </strong>
               <span>{error}</span>
             </div>

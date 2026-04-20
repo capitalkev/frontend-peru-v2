@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { SunatService } from "../services/sunat.service";
-import type { ClientOption, UserOption, SunatMetrics } from "../types";
+import type { ClientOption, UserOption, SunatTotales } from "../types";
 
 export function useSunatUsers(isAuthenticated: boolean, isAdmin: boolean) {
   const [users, setUsers] = useState<UserOption[]>([]);
@@ -79,21 +79,9 @@ export function useSunatData(
   refreshTrigger: number,
 ) {
   const [ventas, setVentas] = useState<any[]>([]);
-  const [metrics, setMetrics] = useState<SunatMetrics>({
-    PEN: {
-      totalFacturado: 0,
-      montoGanado: 0,
-      montoDisponible: 0,
-      cantidad: 0,
-      winPercentage: 0,
-    },
-    USD: {
-      totalFacturado: 0,
-      montoGanado: 0,
-      montoDisponible: 0,
-      cantidad: 0,
-      winPercentage: 0,
-    },
+  const [totales, setTotales] = useState<SunatTotales>({
+    PEN: { totalFacturado: 0, cantidad: 0 },
+    USD: { totalFacturado: 0, cantidad: 0 },
   });
   const [pagination, setPagination] = useState({
     page: 1,
@@ -141,33 +129,49 @@ export function useSunatData(
     };
   }, [dateFilter]);
 
-  const buildParams = (isMetrics = false) => {
-    const params = new URLSearchParams({
-      fecha_desde: startDate,
-      fecha_hasta: endDate,
-    });
-    if (!isMetrics) {
-      params.append("page", String(currentPage));
-      params.append("page_size", viewMode === "grouped" ? "1000" : "20");
-      params.append("sort_by", sortBy);
-    }
-    selectedCurrencies.forEach((c) => params.append("moneda", c));
-    if (
-      selectedClientIds.length > 0 &&
-      selectedClientIds.length < clientsLength
-    ) {
-      selectedClientIds.forEach((ruc) => params.append("rucs_empresa", ruc));
-    }
-    if (
-      selectedUserEmails.length > 0 &&
-      selectedUserEmails.length <= usersLength
-    ) {
-      selectedUserEmails.forEach((email) =>
-        params.append("usuario_emails", email),
-      );
-    }
-    return params.toString();
-  };
+  const buildParams = useCallback(
+    (isResumen = false) => {
+      const params = new URLSearchParams({
+        fecha_desde: startDate,
+        fecha_hasta: endDate,
+      });
+      if (!isResumen) {
+        params.append("page", String(currentPage));
+        params.append("page_size", viewMode === "grouped" ? "1000" : "20");
+        params.append("sort_by", sortBy);
+      }
+      selectedCurrencies.forEach((c) => params.append("moneda", c));
+
+      if (
+        selectedClientIds.length > 0 &&
+        selectedClientIds.length < clientsLength
+      ) {
+        selectedClientIds.forEach((ruc) => params.append("rucs_empresa", ruc));
+      }
+
+      if (
+        selectedUserEmails.length > 0 &&
+        selectedUserEmails.length <= usersLength
+      ) {
+        selectedUserEmails.forEach((email) =>
+          params.append("usuario_emails", email),
+        );
+      }
+      return params.toString();
+    },
+    [
+      startDate,
+      endDate,
+      currentPage,
+      viewMode,
+      sortBy,
+      selectedClientIds,
+      clientsLength,
+      selectedCurrencies,
+      selectedUserEmails,
+      usersLength,
+    ],
+  );
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -176,15 +180,12 @@ export function useSunatData(
       setLoading(true);
       setError(null);
       try {
-        const [metricsData, salesData] = await Promise.all([
-          SunatService.getMetrics(buildParams(true)),
-          SunatService.getVentas(buildParams(false)),
-        ]);
+        const totalesData = await SunatService.getResumen(buildParams(true));
+        const salesData = await SunatService.getVentas(buildParams(false));
 
-        // Asignación directa con valores por defecto por seguridad
-        setMetrics({
-          PEN: metricsData.PEN || { totalFacturado: 0, cantidad: 0 },
-          USD: metricsData.USD || { totalFacturado: 0, cantidad: 0 },
+        setTotales({
+          PEN: totalesData.PEN || { totalFacturado: 0, cantidad: 0 },
+          USD: totalesData.USD || { totalFacturado: 0, cantidad: 0 },
         });
 
         setVentas(salesData.items || []);
@@ -197,18 +198,7 @@ export function useSunatData(
     };
 
     fetchData();
-  }, [
-    isAuthenticated,
-    startDate,
-    endDate,
-    currentPage,
-    viewMode,
-    sortBy,
-    selectedClientIds,
-    selectedCurrencies,
-    selectedUserEmails,
-    refreshTrigger,
-  ]);
+  }, [isAuthenticated, buildParams, refreshTrigger]);
 
-  return { ventas, metrics, pagination, loading, error, periodLabel };
+  return { ventas, totales, pagination, loading, error, periodLabel };
 }

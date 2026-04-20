@@ -16,7 +16,7 @@ export function Step2Validate({ deudores, updateCorreos, onBack, onConfirm }: St
     <Card className="border-transparent shadow-none bg-transparent">
       <CardHeader className="px-0 pt-0">
         <CardTitle className="text-2xl">Validación de Documentos y Correos</CardTitle>
-        <p className="text-slate-500 text-sm">
+        <p className="text-slate-500 text-xs">
           Se han generado <strong className="text-slate-800">{deudores.length} cartas de cesión</strong> exitosamente. Asigna los correos destinatarios.
         </p>
       </CardHeader>

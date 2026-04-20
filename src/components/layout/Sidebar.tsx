@@ -10,6 +10,7 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,7 +24,8 @@ export type Route =
   | "sunat"
   | "profile"
   | "operation-detail"
-  | "envio-cartas";
+  | "envio-cartas"
+  | "iam";
 
 interface SidebarProps {
   currentRoute: Route;
@@ -39,6 +41,7 @@ const MENU_ITEMS = [
   { id: "envio-cartas", label: "Envío de Cartas de Cesión", icon: Menu },
   { id: "sunat", label: "Portal SUNAT", icon: FileBarChart },
   { id: "profile", label: "Perfil y Scoring", icon: UserCircle },
+  { id: "iam", label: "Gestión de Acceso (IAM)", icon: Shield },
 ] as const;
 
 // 2. COMPONENTE
@@ -144,7 +147,7 @@ export function Sidebar({
             isCollapsed ? "justify-center" : "justify-between",
           )}
         >
-          <div className="flex items-center gap-2 text-sm font-medium">
+          <div className="flex items-center gap-2 text-xs font-medium">
             <LogOut className="h-4 w-4 shrink-0" />
             {!isCollapsed && <span>Cerrar Sesión</span>}
           </div>

@@ -41,7 +41,7 @@ export function Step2Config({
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Tasa Aplicada <span className="text-red-500">*</span></label>
+            <label className="text-xs font-medium text-slate-700">Tasa Aplicada <span className="text-red-500">*</span></label>
             <Input 
               value={rate} 
               onChange={(e) => setRate(e.target.value)}
@@ -50,7 +50,7 @@ export function Step2Config({
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Comisión Fija <span className="text-red-500">*</span></label>
+            <label className="text-xs font-medium text-slate-700">Comisión Fija <span className="text-red-500">*</span></label>
             <Input 
               value={commission} 
               onChange={(e) => setCommission(e.target.value)}
@@ -66,7 +66,7 @@ export function Step2Config({
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Gestión de Notificaciones</CardTitle>
-            <p className="text-sm text-slate-500">Configura a quién se enviarán los sustentos.</p>
+            <p className="text-xs text-slate-500">Configura a quién se enviarán los sustentos.</p>
           </div>
           {/* Solo mostramos el Toggle si hay más de 1 deudor */}
           {debtors.length > 1 && (
@@ -83,7 +83,7 @@ export function Step2Config({
                 className="overflow-hidden"
               >
                 <div className="bg-sky-50 p-4 rounded-xl border border-sky-200 mb-4 shadow-sm">
-                  <label className="text-sm font-semibold text-sky-900 mb-2 block">Destinatarios Globales</label>
+                  <label className="text-xs font-semibold text-sky-900 mb-2 block">Destinatarios Globales</label>
                   <EmailInput 
                     value={globalEmails} 
                     onChange={setGlobalEmails} 
@@ -170,7 +170,7 @@ export function Step2Config({
           </div>
 
           {error && (
-            <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm mt-4">
+            <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg text-xs mt-4">
               <strong className="font-bold">Aviso: </strong>
               <span>{error}</span>
             </div>
