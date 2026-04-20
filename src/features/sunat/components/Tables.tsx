@@ -7,7 +7,6 @@ const formatCurrency = (value: number, currency: "PEN" | "USD") => {
   return new Intl.NumberFormat("es-PE", { style: "currency", currency }).format(value);
 };
 
-// --- TABLA DETALLADA CON SKELETON ---
 export function DetailedTable({ invoices, loading }: { invoices: Invoice[]; loading?: boolean }) {
   return (
     <table className="w-full text-left border-collapse min-w-[800px]">
@@ -21,7 +20,6 @@ export function DetailedTable({ invoices, loading }: { invoices: Invoice[]; load
       </thead>
       <tbody className="divide-y divide-slate-100">
         {loading ? (
-          // Skeleton para Tabla Detallada
           Array.from({ length: 8 }).map((_, i) => (
             <tr key={`skeleton-det-${i}`} className="animate-pulse bg-white">
               <td className="px-4 py-4"><div className="h-4 w-24 bg-slate-200 rounded"></div></td>
@@ -73,7 +71,6 @@ export function DetailedTable({ invoices, loading }: { invoices: Invoice[]; load
   );
 }
 
-// --- TABLA AGRUPADA CON SKELETON ---
 export function GroupedTable({ groups, expandedKey, onExpand, loading }: any) {
   return (
     <table className="w-full text-left border-collapse min-w-[800px]">
