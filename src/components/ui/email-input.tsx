@@ -2,7 +2,6 @@ import * as React from "react";
 import { X, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// 1. INTERFAZ
 export interface EmailInputProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "onChange"
@@ -13,7 +12,6 @@ export interface EmailInputProps extends Omit<
   disabled?: boolean;
 }
 
-// 2. COMPONENTE BASE
 const EmailInput = React.forwardRef<HTMLDivElement, EmailInputProps>(
   (
     {
@@ -74,7 +72,7 @@ const EmailInput = React.forwardRef<HTMLDivElement, EmailInputProps>(
             disabled && "opacity-50 cursor-not-allowed",
           )}
         >
-          {/* ZONA SUPERIOR: Correos agregados */}
+          {/* Correos agregados */}
           {value.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 p-3 border-b border-slate-100 bg-slate-50/80">
               {value.map((email) => (
@@ -129,5 +127,4 @@ const EmailInput = React.forwardRef<HTMLDivElement, EmailInputProps>(
 );
 EmailInput.displayName = "EmailInput";
 
-// 3. EXPORTACIÓN
 export { EmailInput };

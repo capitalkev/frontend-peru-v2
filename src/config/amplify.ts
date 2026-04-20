@@ -11,7 +11,6 @@ export function configureAmplify() {
           oauth: {
             domain: ENV.COGNITO_DOMAIN,
             scopes: ['email', 'profile', 'openid', 'aws.cognito.signin.user.admin'],
-            // Aseguramos que coincida con lo que tienes en la consola de AWS
             redirectSignIn: ['http://localhost:5173/callback'],
             redirectSignOut: ['http://localhost:5173/login'],
             responseType: 'code',

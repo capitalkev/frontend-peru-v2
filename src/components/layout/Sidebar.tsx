@@ -66,7 +66,11 @@ export function Sidebar({
       >
         {!isCollapsed && (
           <span className="text-xl font-bold text-navy-900 tracking-tight">
-            capital<span className="text-brand-600">express</span>
+            <img
+              src="/src/assets/capitalexpress.png"
+              alt="Logo"
+              className="h-8"
+            />
           </span>
         )}
         <Button

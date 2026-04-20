@@ -1,29 +1,9 @@
-// src/features/operaciones/components/TablaOperaciones.tsx
-import {
-  FileText,
-  MoreHorizontal,
-  Eye,
-  User,
-  Clock,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Eye, Clock, CheckCircle2, XCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
-import { OperacionDetalle } from "../types";
+import type { OperacionDetalle, StatusConfig } from "@/src/features/operaciones/types";
 
-const STATUS_CONFIG: Record<
-  string,
-  { label: string; color: string; icon: any }
-> = {
+const STATUS_CONFIG: Record<string, StatusConfig> = {
   Ingresado: {
     label: "Ingresado",
     color: "bg-blue-50 text-blue-700 border-blue-200",
@@ -39,22 +19,15 @@ const STATUS_CONFIG: Record<
     color: "bg-rose-50 text-rose-700 border-rose-200",
     icon: XCircle,
   },
-  // ... (puedes agregar los demás estados que ya tenías)
-};
 
-interface TablaOperacionesProps {
-  operaciones: OperacionDetalle[];
-  loading: boolean;
-  isAdmin: boolean;
-  onViewDetails: (id: string, codigo: string) => void;
-}
+};
 
 export function TablaOperaciones({
   operaciones,
   loading,
   isAdmin,
   onViewDetails,
-}: TablaOperacionesProps) {
+}: any) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -106,7 +79,7 @@ export function TablaOperaciones({
                 </td>
               </tr>
             ) : (
-              operaciones.map((op) => {
+              operaciones.map((op: OperacionDetalle) => {
                 const status = STATUS_CONFIG[op.estado] || {
                   label: op.estado,
                   color: "bg-slate-100 text-slate-700",

@@ -2,12 +2,10 @@ import { Bell, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
-// 1. INTERFAZ
 interface HeaderProps {
   title?: string;
 }
 
-// 2. COMPONENTE
 export function Header({ title }: HeaderProps) {
   const { user } = useAuth();
 

@@ -2,8 +2,6 @@ import * as React from "react";
 import { UploadCloud, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// 1. INTERFAZ
-// Omitimos 'onDrop' del div nativo porque nosotros lo estamos sobreescribiendo
 export interface DropzoneProps extends Omit<
   React.HTMLAttributes<HTMLDivElement>,
   "onDrop"
@@ -15,7 +13,6 @@ export interface DropzoneProps extends Omit<
   accept?: string;
 }
 
-// 2. COMPONENTE BASE
 const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
   (
     {
@@ -114,5 +111,4 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
 );
 Dropzone.displayName = "Dropzone";
 
-// 3. EXPORTACIÓN
 export { Dropzone };
