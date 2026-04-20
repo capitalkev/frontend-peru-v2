@@ -1,156 +1,122 @@
-import {
-  Clock,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  FileText,
-  User,
-  MoreHorizontal,
-} from "lucide-react";
+import { Eye, Clock, CheckCircle2, XCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
 import { cn } from "@/lib/utils";
-import type {
-  OperacionDetalle,
-  StatusConfig,
-} from "@/features/operaciones/types";
+import type { OperacionDetalle, StatusConfig } from "@/src/features/operaciones/types";
 
 const STATUS_CONFIG: Record<string, StatusConfig> = {
   Ingresado: {
     label: "Ingresado",
-    color: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100",
+    color: "bg-blue-50 text-blue-700 border-blue-200",
     icon: Clock,
-  },
-  "Pendiente de Firma": {
-    label: "Pendiente Firma",
-    color: "bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100",
-    icon: Clock,
-  },
-  Firmado: {
-    label: "Firmado",
-    color: "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100",
-    icon: CheckCircle2,
-  },
-  Observado: {
-    label: "Observado",
-    color: "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100",
-    icon: AlertCircle,
   },
   Aprobado: {
     label: "Aprobado",
-    color:
-      "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
+    color: "bg-emerald-50 text-emerald-700 border-emerald-200",
     icon: CheckCircle2,
   },
   Rechazado: {
     label: "Rechazado",
-    color: "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100",
+    color: "bg-rose-50 text-rose-700 border-rose-200",
     icon: XCircle,
-  },
-  "En Desembolso": {
-    label: "En Desembolso",
-    color: "bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100",
-    icon: Clock,
-  },
-  Desembolsado: {
-    label: "Desembolsado",
-    color:
-      "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100",
-    icon: CheckCircle2,
-  },
-  Pagado: {
-    label: "Pagado",
-    color: "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200",
-    icon: CheckCircle2,
-  },
-  Vencido: {
-    label: "Vencido",
-    color: "bg-red-50 text-red-700 border-red-200 hover:bg-red-100",
-    icon: AlertCircle,
-  },
-  Anulado: {
-    label: "Anulado",
-    color: "bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100",
-    icon: XCircle,
-  },
-  Cerrado: {
-    label: "Cerrado",
-    color: "bg-zinc-100 text-zinc-700 border-zinc-200 hover:bg-zinc-200",
-    icon: CheckCircle2,
   },
 };
-
-interface TablaOperacionesProps {
-  operaciones: OperacionDetalle[];
-  loading: boolean;
-  isAdmin: boolean;
-}
 
 export function TablaOperaciones({
   operaciones,
   loading,
   isAdmin,
-}: TablaOperacionesProps) {
+  onViewDetails,
+}: any) {
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
-            <tr className="border-b border-slate-100">
-              <th
-                className={cn(
-                  "px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider",
-                  isAdmin ? "w-1/3" : "w-2/5",
-                )}
-              >
+            <tr className="border-b border-slate-100 bg-slate-50/50">
+              <th className={cn("px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider", isAdmin ? "w-1/3" : "w-2/5")}>
                 Cliente / Deudor
               </th>
               {isAdmin && (
-                <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                   Ejecutivo
                 </th>
               )}
-              <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Monto
               </th>
-              <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Fecha
               </th>
-              <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Estado
               </th>
-              <th className="px-6 py-5"></th>
+              <th className="px-6 py-4"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {loading ? (
-              [1, 2, 3].map((n) => (
-                <tr key={n} className="animate-pulse">
-                  <td
-                    colSpan={isAdmin ? 6 : 5}
-                    className="px-6 py-6 bg-slate-50/30 h-20"
-                  ></td>
+              /* SKELETON SCREENS (Boneyard) */
+              Array.from({ length: 5 }).map((_, index) => (
+                <tr key={`skeleton-${index}`} className="animate-pulse bg-white">
+                  {/* Coluna: Cliente / Deudor */}
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="h-4 w-3/4 bg-slate-200 rounded"></div>
+                      <div className="h-3 w-1/2 bg-slate-100 rounded"></div>
+                    </div>
+                  </td>
+                  
+                  {/* Coluna: Ejecutivo (Apenas Admin) */}
+                  {isAdmin && (
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-full bg-slate-200"></div>
+                        <div className="h-4 w-24 bg-slate-200 rounded"></div>
+                      </div>
+                    </td>
+                  )}
+
+                  {/* Coluna: Monto */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="h-4 w-24 bg-slate-200 rounded"></div>
+                  </td>
+
+                  {/* Coluna: Fecha */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex flex-col gap-2">
+                      <div className="h-4 w-20 bg-slate-200 rounded"></div>
+                      <div className="h-3 w-12 bg-slate-100 rounded"></div>
+                    </div>
+                  </td>
+
+                  {/* Coluna: Estado */}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="h-7 w-24 bg-slate-200 rounded-full"></div>
+                  </td>
+
+                  {/* Coluna: Ações */}
+                  <td className="px-6 py-4 text-right whitespace-nowrap">
+                    <div className="h-8 w-8 bg-slate-200 rounded-full inline-block"></div>
+                  </td>
                 </tr>
               ))
             ) : operaciones.length === 0 ? (
               <tr>
                 <td colSpan={isAdmin ? 6 : 5} className="py-16 text-center">
-                  <FileText className="h-8 w-8 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-500">
+                  <FileText className="h-10 w-10 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-500 font-medium">
                     No hay operaciones para mostrar
+                  </p>
+                  <p className="text-slate-400 text-sm mt-1">
+                    Carga una nueva operación para comenzar.
                   </p>
                 </td>
               </tr>
             ) : (
-              operaciones.map((op) => {
+              operaciones.map((op: OperacionDetalle) => {
                 const status = STATUS_CONFIG[op.estado] || {
-                  label: op.estado,
-                  color: "bg-slate-100 text-slate-700 hover:bg-slate-200",
+                  label: op.estado || "Desconocido",
+                  color: "bg-slate-100 text-slate-700 border-slate-200",
                   icon: FileText,
                 };
                 const StatusIcon = status.icon;
@@ -158,102 +124,58 @@ export function TablaOperaciones({
                 return (
                   <tr
                     key={op.id}
-                    className="group hover:bg-slate-50/50 transition-colors"
+                    className="group hover:bg-slate-50/80 transition-colors"
                   >
                     <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-sm font-medium text-slate-800 leading-tight line-clamp-2 pr-4">
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-sm font-semibold text-slate-900 leading-tight">
                           {op.nombre_cliente}
                         </span>
-                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                          <span className="text-slate-400">
-                            {op.codigo_operacion}
-                          </span>
-                          {op.cliente_ruc && (
-                            <>
-                              <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                              <span>RUC: {op.cliente_ruc}</span>
-                            </>
-                          )}
-                        </div>
+                        <span className="text-xs font-medium text-slate-500">
+                          {op.codigo_operacion}
+                        </span>
                       </div>
                     </td>
+                    
                     {isAdmin && (
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <div className="h-7 w-7 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
-                            <User className="h-3.5 w-3.5" />
-                          </div>
-                          <span className="text-sm font-medium text-slate-700">
-                            {op.nombre_ejecutivo || "Sin Asignar"}
-                          </span>
-                        </div>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                        {op.nombre_ejecutivo || "Sin Asignar"}
                       </td>
                     )}
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          op.moneda_sumatoria === "USD"
-                            ? "text-blue-600"
-                            : "text-slate-800",
-                        )}
-                      >
-                        {op.moneda_sumatoria}{" "}
-                        {op.monto_sumatoria_total?.toLocaleString("es-PE", {
-                          minimumFractionDigits: 2,
-                        })}
-                      </span>
+
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-900 text-sm">
+                      {op.moneda_sumatoria} {op.monto_sumatoria_total?.toLocaleString('es-PE', { minimumFractionDigits: 2 })}
                     </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex flex-col">
-                        <span className="text-sm text-slate-700 font-medium">
-                          {new Date(op.fecha_creacion).toLocaleDateString(
-                            "es-PE",
-                            {
-                              day: "2-digit",
-                              month: "2-digit",
-                              year: "2-digit",
-                            },
-                          )}
+                      <div className="flex flex-col gap-1">
+                        <span className="text-sm font-medium text-slate-700">
+                          {new Date(op.fecha_creacion).toLocaleDateString('es-PE')}
                         </span>
                         <span className="text-xs text-slate-400">
-                          {new Date(op.fecha_creacion).toLocaleTimeString(
-                            "es-PE",
-                            { hour: "2-digit", minute: "2-digit" },
-                          )}
+                          {new Date(op.fecha_creacion).toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                     </td>
+
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "flex items-center gap-1.5 px-3 py-1 text-xs font-medium border shadow-none transition-colors",
-                          status.color,
-                        )}
-                      >
+                      <span className={cn("inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-full border", status.color)}>
                         <StatusIcon className="w-3.5 h-3.5" />
                         {status.label}
-                      </Badge>
+                      </span>
                     </td>
-                    <td className="px-6 py-4 text-right whitespace-nowrap">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-700 outline-none"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="w-40 bg-white rounded-xl shadow-lg border border-slate-100 p-1 z-50"
-                        >
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+
+                    <td className="px-6 py-4 text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-slate-400 hover:text-brand-600 hover:bg-brand-50"
+                        onClick={() =>
+                          onViewDetails(op.id, op.codigo_operacion)
+                        }
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
                     </td>
                   </tr>
                 );

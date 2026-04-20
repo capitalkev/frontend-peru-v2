@@ -3,9 +3,9 @@ import { ENV } from "@/config/env";
 import type { OperacionDetalle } from "@/features/operaciones/types";
 
 export const OperacionesService = {
-  // Obtener lista de operaciones del usuario
   getOperations: async (email: string): Promise<OperacionDetalle[]> => {
     const headers = await getAuthHeaders();
+    console.log(ENV.API_OPERACIONES);
     const response = await fetch(
       `${ENV.API_OPERACIONES}/operaciones/${email}`,
       {
@@ -17,7 +17,6 @@ export const OperacionesService = {
     return response.json();
   },
 
-  // Obtener facturas de una operación (Para la vista de detalle)
   getFacturasByOperation: async (idOperacion: string) => {
     const headers = await getAuthHeaders();
     const response = await fetch(

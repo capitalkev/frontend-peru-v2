@@ -9,14 +9,11 @@ export const NuevaOperacionService = {
     const formData = new FormData();
     files.forEach((file) => formData.append("xml_files", file));
 
-    const response = await fetch(
-      `${ENV.API_OPERACIONES}/robot/extraer-deudores`,
-      {
-        method: "POST",
-        headers,
-        body: formData,
-      },
-    );
+    const response = await fetch(`${ENV.API_OPERACIONES}/robot/extraer-deudores`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
 
     if (!response.ok) throw new Error("Error al extraer deudores");
     return response.json();
@@ -24,13 +21,10 @@ export const NuevaOperacionService = {
 
   getContactos: async (ruc_deudor: string): Promise<{ email: string }[]> => {
     const headers = await getAuthHeaders();
-    const response = await fetch(
-      `${ENV.API_OPERACIONES}/contactos/${ruc_deudor}`,
-      {
-        method: "GET",
-        headers,
-      },
-    );
+    const response = await fetch(`${ENV.API_OPERACIONES}/contactos/${ruc_deudor}`, {
+      method: "GET",
+      headers,
+    });
     if (!response.ok) return [];
     return response.json();
   },
@@ -55,7 +49,7 @@ export const NuevaOperacionService = {
     frontendData: FrontendData,
     xmlFiles: File[],
     sustentos: File[],
-    additionalDocs: File[],
+    additionalDocs: File[]
   ) => {
     const headers = await getAuthHeaders(true);
     const formData = new FormData();
@@ -65,17 +59,13 @@ export const NuevaOperacionService = {
     sustentos.forEach((file) => formData.append("pdf_files", file));
     additionalDocs.forEach((file) => formData.append("respaldo_files", file));
 
-    const response = await fetch(
-      `${ENV.API_OPERACIONES}/robot/procesar-completa`,
-      {
-        method: "POST",
-        headers,
-        body: formData,
-      },
-    );
+    const response = await fetch(`${ENV.API_OPERACIONES}/robot/procesar-completa`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
 
-    if (!response.ok)
-      throw new Error("Error al procesar la operación completa");
+    if (!response.ok) throw new Error("Error al procesar la operación completa");
     return response.json();
   },
 };
