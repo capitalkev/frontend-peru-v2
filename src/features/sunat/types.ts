@@ -1,9 +1,6 @@
 export interface SunatMetricsCurrency {
   totalFacturado: number;
-  montoGanado: number;
-  montoDisponible: number;
   cantidad: number;
-  winPercentage: number;
 }
 
 export interface SunatMetrics {

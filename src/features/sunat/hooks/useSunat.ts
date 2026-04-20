@@ -8,12 +8,16 @@ export function useSunatUsers(isAuthenticated: boolean, isAdmin: boolean) {
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) return;
     SunatService.getUsers()
-      .then(data => setUsers(data.map((u: any) => ({ 
-         email: u.email, 
-         nombre: u.email,
-         rol: u.roles && u.roles.length > 0 ? u.roles[0] : "sin_asignar"
-      }))))
-      .catch(err => console.error("Error fetching users:", err));
+      .then((data) =>
+        setUsers(
+          data.map((u: any) => ({
+            email: u.email,
+            nombre: u.email,
+            rol: u.roles && u.roles.length > 0 ? u.roles[0] : "sin_asignar",
+          })),
+        ),
+      )
+      .catch((err) => console.error("Error fetching users:", err));
   }, [isAuthenticated, isAdmin]);
 
   return { users };
@@ -144,7 +148,7 @@ export function useSunatData(
     });
     if (!isMetrics) {
       params.append("page", String(currentPage));
-      params.append("page_size", viewMode === "grouped" ? "100" : "20");
+      params.append("page_size", viewMode === "grouped" ? "1000" : "20");
       params.append("sort_by", sortBy);
     }
     selectedCurrencies.forEach((c) => params.append("moneda", c));
@@ -167,6 +171,7 @@ export function useSunatData(
 
   useEffect(() => {
     if (!isAuthenticated) return;
+
     const fetchData = async () => {
       setLoading(true);
       setError(null);
@@ -176,20 +181,12 @@ export function useSunatData(
           SunatService.getVentas(buildParams(false)),
         ]);
 
-        const calcMetrics = (data: any) => {
-          const res = { PEN: data.PEN || {}, USD: data.USD || {} };
-          res.PEN.winPercentage =
-            res.PEN.totalFacturado > 0
-              ? (res.PEN.montoGanado / res.PEN.totalFacturado) * 100
-              : 0;
-          res.USD.winPercentage =
-            res.USD.totalFacturado > 0
-              ? (res.USD.montoGanado / res.USD.totalFacturado) * 100
-              : 0;
-          return res as SunatMetrics;
-        };
+        // Asignación directa con valores por defecto por seguridad
+        setMetrics({
+          PEN: metricsData.PEN || { totalFacturado: 0, cantidad: 0 },
+          USD: metricsData.USD || { totalFacturado: 0, cantidad: 0 },
+        });
 
-        setMetrics(calcMetrics(metricsData));
         setVentas(salesData.items || []);
         setPagination(salesData.pagination);
       } catch (err: any) {
@@ -198,6 +195,7 @@ export function useSunatData(
         setLoading(false);
       }
     };
+
     fetchData();
   }, [
     isAuthenticated,
