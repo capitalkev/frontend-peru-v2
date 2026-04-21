@@ -39,33 +39,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const domain = email.split("@")[1];
 
         if (!ALLOWED_EMAIL_DOMAINS.includes(domain)) {
-          await signOut();
-          const loginUrl = `/login?error=domain&domain=${domain}`;
-          window.location.href = loginUrl;
+          sessionStorage.setItem("loginErrorDomain", domain);
+          await signOut(); 
           return;
         }
 
         const groupsClaim = decoded["cognito:groups"];
-        const groups: string[] = Array.isArray(groupsClaim)
-          ? groupsClaim
-          : [];
+        const groups: string[] = Array.isArray(groupsClaim) ? groupsClaim : [];
 
         const validGroups = groups
           .filter((g) => !g.endsWith("_google") && !g.includes("us-east-1"))
           .filter((g) => (AVAILABLE_ROLES as readonly string[]).includes(g));
 
-        const rol = validGroups.length > 0 ? validGroups[0] : "sin_asignar";
+        const roles = validGroups.length > 0 ? validGroups : ["sin_asignar"];
 
         const authUserData: AuthUser = {
           email,
           nombre: typeof decoded.name === "string" ? decoded.name : "",
-          rol,
+          roles,  
         };
 
         setAuthUser(authUserData);
         setUser(currentUser);
-      } catch (error: unknown) {
-        console.error(error);
+      } catch (error: any) {
+        if (error.name !== 'UserUnAuthenticatedException' && error.message !== 'User needs to be authenticated to call this API.') {
+            console.error("Error al validar la sesión:", error);
+        }
         setUser(null);
         setAuthUser(null);
       } finally {

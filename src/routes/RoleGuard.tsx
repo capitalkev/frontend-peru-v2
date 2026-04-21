@@ -1,4 +1,3 @@
-// src/routes/RoleGuard.tsx
 import { Outlet } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { ShieldAlert } from "lucide-react";
@@ -12,8 +11,9 @@ export function RoleGuard({ allowedRoles }: RoleGuardProps) {
   const { authUser, loading } = useAuth();
 
   if (loading) return null;
+  const hasAccess = authUser?.roles.some(rol => allowedRoles.includes(rol));
 
-  if (!authUser || !allowedRoles.includes(authUser.rol)) {
+  if (!authUser || !hasAccess) {
     return (
       <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)]">
         <Card className="border-slate-200 shadow-sm p-12 flex flex-col items-center justify-center text-center max-w-md">

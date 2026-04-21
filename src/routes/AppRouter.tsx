@@ -14,7 +14,6 @@ import { IAMPage } from "@/pages/iam/IAMPage";
 import { ShieldAlert } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
-// Pantalla para usuarios sin rol asignado
 function AccesoPendiente() {
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)]">
@@ -33,7 +32,7 @@ function AccesoPendiente() {
 export function AppRouter() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { authUser } = useAuth(); // Obtenemos el usuario
+  const { authUser } = useAuth();
 
   const getCurrentRoute = (): SidebarRoute => {
     const path = location.pathname;
@@ -41,7 +40,6 @@ export function AppRouter() {
     if (path === '/nueva-operacion') return "new-operation";
     if (path === '/envio-cartas') return "envio-cartas";
     if (path === '/sunat') return "sunat";
-    if (path === '/perfil') return "profile";
     if (path === '/iam') return "iam";
     return "dashboard";
   };
@@ -51,7 +49,6 @@ export function AppRouter() {
       "operations": "/operaciones",
       "new-operation": "/nueva-operacion",
       "sunat": "/sunat",
-      "profile": "/perfil",
       "envio-cartas": "/envio-cartas",
       "iam": "/iam",
     };
@@ -64,7 +61,7 @@ export function AppRouter() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/callback" element={<Navigate to="/" replace />} />
-      
+
       <Route element={<ProtectedRoute />}>
         <Route element={
           <Layout currentRoute={getCurrentRoute()} onNavigate={handleNavigateSidebar}>
@@ -73,7 +70,6 @@ export function AppRouter() {
         }>
           <Route path="/" element={<Navigate to="/operaciones" replace />} />
           
-          {/* Rutas compartidas (ej. admin, ventas, gestion) */}
           <Route element={<RoleGuard allowedRoles={["admin", "ventas", "gestion"]} />}>
             <Route path="/operaciones" element={<ListaOperacionesPage />} />
             <Route path="/nueva-operacion" element={<NewOperationPage />} />
@@ -81,7 +77,7 @@ export function AppRouter() {
             <Route path="/sunat" element={<SunatPage />} />
           </Route>
 
-          {/* Rutas exclusivas para admin */}
+          {/* Rutas exclusivas para admin */} 
           <Route element={<RoleGuard allowedRoles={["admin"]} />}>
             <Route path="/iam" element={<IAMPage />} />
           </Route>

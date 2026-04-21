@@ -5,7 +5,6 @@ import type { OperacionDetalle } from "@/features/operaciones/types";
 export const OperacionesService = {
   getOperations: async (email: string): Promise<OperacionDetalle[]> => {
     const headers = await getAuthHeaders();
-    console.log(ENV.API_OPERACIONES);
     const response = await fetch(
       `${ENV.API_OPERACIONES}/operaciones/${email}`,
       {

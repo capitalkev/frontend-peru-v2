@@ -4,13 +4,14 @@ export interface AppUser {
   displayName?: string;
   email?: string;
   photoURL?: string;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export interface AuthUser {
   email: string;
   nombre: string;
-  rol: string;
+  roles: string[];
+  [key: string]: any;
 }
 
 export interface AuthContextType {

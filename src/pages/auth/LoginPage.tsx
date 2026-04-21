@@ -1,5 +1,4 @@
-import { Navigate, useSearchParams } from "react-router-dom";
-import { AlertCircle } from "lucide-react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 const GoogleIcon = () => (
@@ -25,9 +24,6 @@ const GoogleIcon = () => (
 
 export function LoginPage() {
   const { loginWithGoogle, user, loading } = useAuth();
-  const [searchParams] = useSearchParams();
-  const errorParam = searchParams.get("error");
-  const domainParam = searchParams.get("domain");
 
   if (user) return <Navigate to="/" replace />;
 
@@ -51,17 +47,6 @@ export function LoginPage() {
               Inicia sesión para acceder a tu panel.
             </p>
           </div>
-
-          {errorParam === "domain" && (
-            <div className="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2">
-              <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-red-800">
-                El correo <b>@{domainParam}</b> no está autorizado. Por favor,
-                usa tu cuenta corporativa.
-              </p>
-            </div>
-          )}
-
           <button
             onClick={loginWithGoogle}
             disabled={loading}

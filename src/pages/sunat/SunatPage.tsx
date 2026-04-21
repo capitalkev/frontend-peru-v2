@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, AlertTriangle, Loader2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 
-// Importaciones del feature
 import { ResumenDashboard } from "@/features/sunat/components/ResumenDashboard";
 import {
   ClientFilter,

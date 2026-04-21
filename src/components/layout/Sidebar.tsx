@@ -21,7 +21,6 @@ export type Route =
   | "operations"
   | "new-operation"
   | "sunat"
-  | "profile"
   | "operation-detail"
   | "envio-cartas"
   | "iam";
@@ -65,12 +64,6 @@ const MENU_ITEMS = [
     roles: ["admin", "ventas", "gestion"],
   },
   {
-    id: "profile",
-    label: "Perfil y Scoring",
-    icon: UserCircle,
-    roles: ["admin", "ventas", "gestion", "sin_asignar"],
-  },
-  {
     id: "iam",
     label: "Gestión de Acceso (IAM)",
     icon: Shield,
@@ -85,13 +78,11 @@ export function Sidebar({
   onToggleCollapse,
 }: SidebarProps) {
   const { logout, authUser } = useAuth();
+  console.log("Auth User in Sidebar:", authUser); // Debugging line
+  const userRoles = authUser?.roles || ["sin_asignar"];
 
-  // 2. Obtenemos el rol del usuario (por defecto sin_asignar por seguridad)
-  const userRole = authUser?.rol || "sin_asignar";
-
-  // 3. Filtramos el menú para que solo vea lo que su rol permite
   const visibleItems = MENU_ITEMS.filter((item) =>
-    item.roles.includes(userRole),
+    item.roles.some((role) => userRoles.includes(role)),
   );
 
   return (
@@ -131,7 +122,6 @@ export function Sidebar({
       </div>
 
       <nav className="flex-1 px-3 space-y-1 mt-2 overflow-y-auto hide-scrollbar">
-        {/* Iteramos sobre visibleItems en lugar de MENU_ITEMS */}
         {visibleItems.map((item) => {
           const isActive =
             currentRoute === item.id ||
