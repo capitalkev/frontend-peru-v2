@@ -67,29 +67,23 @@ export function IAMPage() {
 
     try {
       if (role === "sin_asignar") {
-        if (hasRole) {
-          await IAMService.removeRole(user.username, role);
-        } else {
+        if (!hasRole) {
           const rolesToRemove = user.roles.filter(
-            (r): r is Role =>
-              (AVAILABLE_ROLES as readonly string[]).includes(r) &&
-              r !== "sin_asignar",
+            (r): r is Role => r !== "sin_asignar"
           );
+          
           for (const r of rolesToRemove) {
             await IAMService.removeRole(user.username, r);
           }
-          await IAMService.assignRole(user.username, role);
         }
       } else {
         if (hasRole) {
           await IAMService.removeRole(user.username, role);
         } else {
-          if (user.roles.includes("sin_asignar")) {
-            await IAMService.removeRole(user.username, "sin_asignar");
-          }
           await IAMService.assignRole(user.username, role);
         }
       }
+      
       await loadUsers();
     } catch (err: unknown) {
       console.error(err);

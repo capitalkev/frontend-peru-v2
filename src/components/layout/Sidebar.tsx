@@ -1,20 +1,14 @@
 import { motion } from "motion/react";
 import {
-  LayoutDashboard,
-  Briefcase,
-  PlusCircle,
-  UserCircle,
-  FileBarChart,
   LogOut,
   ChevronRight,
-  Menu,
   PanelLeftClose,
   PanelLeftOpen,
-  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { ROUTES_CONFIG } from "@/config/routes.config";
 
 export type Route =
   | "dashboard"
@@ -32,45 +26,6 @@ interface SidebarProps {
   onToggleCollapse: () => void;
 }
 
-const MENU_ITEMS = [
-  {
-    id: "dashboard",
-    label: "Dashboard General",
-    icon: LayoutDashboard,
-    roles: ["admin", "ventas", "gestion"],
-  },
-  {
-    id: "operations",
-    label: "Mis Operaciones",
-    icon: Briefcase,
-    roles: ["admin", "ventas", "gestion"],
-  },
-  {
-    id: "new-operation",
-    label: "Nueva Operación",
-    icon: PlusCircle,
-    roles: ["admin", "ventas", "gestion"],
-  },
-  {
-    id: "envio-cartas",
-    label: "Envío de Cartas de Cesión",
-    icon: Menu,
-    roles: ["admin", "ventas","gestion"],
-  },
-  {
-    id: "sunat",
-    label: "Portal SUNAT",
-    icon: FileBarChart,
-    roles: ["admin", "ventas", "gestion"],
-  },
-  {
-    id: "iam",
-    label: "Gestión de Acceso (IAM)",
-    icon: Shield,
-    roles: ["admin"],
-  },
-] as const;
-
 export function Sidebar({
   currentRoute,
   onNavigate,
@@ -78,11 +33,11 @@ export function Sidebar({
   onToggleCollapse,
 }: SidebarProps) {
   const { logout, authUser } = useAuth();
-  console.log("Auth User in Sidebar:", authUser); // Debugging line
-  const userRoles = authUser?.roles || ["sin_asignar"];
 
-  const visibleItems = MENU_ITEMS.filter((item) =>
-    item.roles.some((role) => userRoles.includes(role)),
+  const userRoles = authUser?.roles || ["sin_asignar"];
+  const visibleItems = ROUTES_CONFIG.filter(
+    (item) =>
+      item.showInSidebar && item.roles.some((role) => userRoles.includes(role)),
   );
 
   return (
@@ -92,6 +47,7 @@ export function Sidebar({
         isCollapsed ? "w-20" : "w-72",
       )}
     >
+      {/* Sección Superior: Logo y Botón de Colapso */}
       <div
         className={cn(
           "p-4 flex items-center",
@@ -121,11 +77,14 @@ export function Sidebar({
         </Button>
       </div>
 
+      {/* Navegación Dinámica */}
       <nav className="flex-1 px-3 space-y-1 mt-2 overflow-y-auto hide-scrollbar">
         {visibleItems.map((item) => {
+          // Lógica para determinar si la ruta está activa
           const isActive =
             currentRoute === item.id ||
             (currentRoute === "operation-detail" && item.id === "operations");
+
           return (
             <button
               key={item.id}
@@ -139,12 +98,14 @@ export function Sidebar({
                   : "text-navy-500 hover:bg-navy-50 hover:text-navy-900",
               )}
             >
+              {/* Indicador visual de ruta activa */}
               {isActive && (
                 <motion.div
                   layoutId="active-pill"
                   className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded-r-full bg-brand-600"
                 />
               )}
+
               <item.icon
                 className={cn(
                   "h-5 w-5 transition-colors shrink-0",
@@ -154,6 +115,7 @@ export function Sidebar({
                     : "text-navy-400 group-hover:text-navy-600",
                 )}
               />
+
               {!isCollapsed && (
                 <>
                   <span className="truncate">{item.label}</span>
@@ -167,6 +129,7 @@ export function Sidebar({
         })}
       </nav>
 
+      {/* Sección Inferior: Cerrar Sesión */}
       <div className="p-4 mt-auto border-t border-slate-100">
         <button
           onClick={logout}
