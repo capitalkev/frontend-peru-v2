@@ -67,7 +67,9 @@ export function IAMPage() {
 
     try {
       if (role === "sin_asignar") {
-        if (!hasRole) {
+        if (hasRole) {
+          await IAMService.removeRole(user.username, role);
+        } else {
           const rolesToRemove = user.roles.filter(
             (r): r is Role => r !== "sin_asignar"
           );
@@ -75,11 +77,15 @@ export function IAMPage() {
           for (const r of rolesToRemove) {
             await IAMService.removeRole(user.username, r);
           }
+          await IAMService.assignRole(user.username, role);
         }
       } else {
         if (hasRole) {
           await IAMService.removeRole(user.username, role);
         } else {
+          if (user.roles.includes("sin_asignar")) {
+             await IAMService.removeRole(user.username, "sin_asignar");
+          }
           await IAMService.assignRole(user.username, role);
         }
       }
@@ -131,7 +137,6 @@ export function IAMPage() {
       </div>
 
       <Card className="border-slate-200 shadow-sm overflow-visible">
-        {/* El overflow-x-auto ya no cortará el menú gracias al Portal de Radix */}
         <div className="overflow-x-auto pb-4">
           <table className="w-full min-w-[720px] text-left border-collapse">
             <thead>
@@ -199,10 +204,6 @@ export function IAMPage() {
                       </td>
 
                       <td className="px-6 py-4 text-right align-top">
-                        {/* AQUI ESTA LA MEJORA:
-                          Uso de Radix UI para asegurar que el Dropdown esté siempre por encima (z-index)
-                          y no se vea afectado por el overflow del contenedor padre.
-                        */}
                         <DropdownMenu.Root>
                           <DropdownMenu.Trigger asChild>
                             <button

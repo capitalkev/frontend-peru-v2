@@ -92,7 +92,7 @@ export function AppRouter() {
     if (route) navigate(route.path);
   };
 
-  const isSinAsignar = authUser?.roles?.includes("sin_asignar");
+  const isSinAsignar = !authUser?.roles || authUser.roles.length === 0;
 
   return (
     <Routes>

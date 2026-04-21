@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (!ALLOWED_EMAIL_DOMAINS.includes(domain)) {
           sessionStorage.setItem("loginErrorDomain", domain);
-          await signOut(); 
+          await signOut();
           return;
         }
 
@@ -51,19 +51,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .filter((g) => !g.endsWith("_google") && !g.includes("us-east-1"))
           .filter((g) => (AVAILABLE_ROLES as readonly string[]).includes(g));
 
-        const roles = validGroups.length > 0 ? validGroups : ["sin_asignar"];
+        const roles = validGroups;
 
         const authUserData: AuthUser = {
           email,
           nombre: typeof decoded.name === "string" ? decoded.name : "",
-          roles,  
+          roles,
         };
 
         setAuthUser(authUserData);
         setUser(currentUser);
       } catch (error: any) {
-        if (error.name !== 'UserUnAuthenticatedException' && error.message !== 'User needs to be authenticated to call this API.') {
-            console.error("Error al validar la sesión:", error);
+        if (
+          error.name !== "UserUnAuthenticatedException" &&
+          error.message !== "User needs to be authenticated to call this API."
+        ) {
+          console.error("Error al validar la sesión:", error);
         }
         setUser(null);
         setAuthUser(null);
