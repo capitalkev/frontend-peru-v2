@@ -24,7 +24,7 @@ import {
 
 export function SunatPage() {
   const { authUser, loading: authLoading } = useAuth();
-  const isAdmin = authUser?.rol === "admin";
+  const isAdmin = authUser?.roles?.includes("admin") || false;
   const isAuthenticated = !!authUser;
 
   const [selectedClientIds, setSelectedClientIds] = useState<string[]>([]);

@@ -20,7 +20,7 @@ export function ListaOperacionesPage() {
       op.nombre_ejecutivo?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const isAdmin = authUser?.rol === "admin";
+  const isAdmin = authUser?.roles?.includes("admin") || false;
 
   return (
     <div className="space-y-6">

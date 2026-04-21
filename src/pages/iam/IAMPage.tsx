@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,25 +9,23 @@ import { AVAILABLE_ROLES } from "@/features/iam/types";
 import type { IAMUser, Role } from "@/features/iam/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth"; // <-- Importamos useAuth
+import { useAuth } from "@/hooks/useAuth";
+
+// Importamos Radix UI Dropdown Menu
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 export function IAMPage() {
-  // 1. Obtenemos el usuario actual y verificamos si es admin
   const { authUser } = useAuth();
-  const isAdmin = authUser?.rol === "admin";
+  // Validamos si tiene el rol de admin dentro de su arreglo de roles
+  const isAdmin = authUser?.roles?.includes("admin") || false;
 
   const [users, setUsers] = useState<IAMUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
-  const [openUser, setOpenUser] = useState<string | null>(null);
-  const [openDirection, setOpenDirection] = useState<"up" | "down">("down");
-  const containerRefs = useRef(new Map<string, HTMLDivElement | null>());
-  const triggerRefs = useRef(new Map<string, HTMLButtonElement | null>());
-
   const loadUsers = async () => {
-    if (!isAdmin) return; // Si no es admin, no hacemos la petición al backend
+    if (!isAdmin) return;
     try {
       setLoading(true);
       const data = await IAMService.listUsers();
@@ -41,9 +39,7 @@ export function IAMPage() {
 
   useEffect(() => {
     let active = true;
-
     const load = async () => {
-      // 2. Bloqueamos la petición inicial si no tiene permisos
       if (!isAdmin) {
         if (active) setLoading(false);
         return;
@@ -57,12 +53,11 @@ export function IAMPage() {
         if (active) setLoading(false);
       }
     };
-
     void load();
     return () => {
       active = false;
     };
-  }, [isAdmin]); // <-- Agregamos isAdmin a las dependencias
+  }, [isAdmin]);
 
   const formatRoleLabel = (role: string) => role.replaceAll("_", " ");
 
@@ -80,7 +75,6 @@ export function IAMPage() {
               (AVAILABLE_ROLES as readonly string[]).includes(r) &&
               r !== "sin_asignar",
           );
-
           for (const r of rolesToRemove) {
             await IAMService.removeRole(user.username, r);
           }
@@ -109,43 +103,6 @@ export function IAMPage() {
     u.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  useEffect(() => {
-    if (!openUser) return;
-    const onPointerDown = (event: MouseEvent) => {
-      const container = containerRefs.current.get(openUser);
-      if (!container) return;
-      if (!container.contains(event.target as Node)) setOpenUser(null);
-    };
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenUser(null);
-    };
-    document.addEventListener("mousedown", onPointerDown, true);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown, true);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [openUser]);
-
-  const toggleDropdownFor = (username: string) => {
-    if (openUser === username) {
-      setOpenUser(null);
-      return;
-    }
-    const trigger = triggerRefs.current.get(username);
-    if (trigger) {
-      const rect = trigger.getBoundingClientRect();
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const spaceAbove = rect.top;
-      const shouldOpenUp = spaceBelow < 340 && spaceAbove > spaceBelow;
-      setOpenDirection(shouldOpenUp ? "up" : "down");
-    } else {
-      setOpenDirection("down");
-    }
-    setOpenUser(username);
-  };
-
-  // 3. VISTA "VACÍA" PARA USUARIOS SIN PERMISOS
   if (!isAdmin) {
     return (
       <div className="space-y-6">
@@ -156,10 +113,7 @@ export function IAMPage() {
             Acceso Restringido
           </h2>
           <p className="text-slate-500 mt-2 text-sm max-w-sm">
-            Tu cuenta actual tiene el rol{" "}
-            <strong>{formatRoleLabel(authUser?.rol || "sin rol")}</strong> y no
-            cuenta con permisos de administrador. <br />
-            <br />
+            Tu cuenta no cuenta con permisos de administrador. <br />
             No puedes visualizar ni modificar los accesos de otros usuarios.
           </p>
         </Card>
@@ -167,7 +121,6 @@ export function IAMPage() {
     );
   }
 
-  // 4. VISTA NORMAL (Para administradores)
   return (
     <div className="space-y-6">
       <Header title="Gestión de Acceso (IAM)" />
@@ -184,9 +137,9 @@ export function IAMPage() {
       </div>
 
       <Card className="border-slate-200 shadow-sm overflow-visible">
-        <div className="overflow-x-auto">
+        {/* El overflow-x-auto ya no cortará el menú gracias al Portal de Radix */}
+        <div className="overflow-x-auto pb-4">
           <table className="w-full min-w-[720px] text-left border-collapse">
-            {/* ... Todo el resto del contenido de la tabla queda exactamente igual ... */}
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -252,51 +205,39 @@ export function IAMPage() {
                       </td>
 
                       <td className="px-6 py-4 text-right align-top">
-                        <div
-                          ref={(el) => {
-                            containerRefs.current.set(user.username, el);
-                          }}
-                          className="relative inline-flex justify-end text-left"
-                        >
-                          <button
-                            ref={(el) => {
-                              triggerRefs.current.set(user.username, el);
-                            }}
-                            type="button"
-                            aria-haspopup="menu"
-                            aria-expanded={openUser === user.username}
-                            onClick={() => toggleDropdownFor(user.username)}
-                            className={cn(
-                              buttonVariants({
-                                variant: "outline",
-                                size: "sm",
-                              }),
-                              "h-8 px-3 rounded-lg text-[10px] uppercase font-bold select-none",
-                              "gap-2",
-                              openUser === user.username &&
-                                "bg-slate-50 border-slate-300",
-                            )}
-                          >
-                            <span className="inline-flex items-center gap-2">
-                              <span>Roles</span>
-                              <span className="text-slate-400">
-                                ({user.roles.length})
-                              </span>
-                              <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
-                            </span>
-                          </button>
-
-                          {openUser === user.username && (
-                            <div
-                              role="menu"
+                        {/* AQUI ESTA LA MEJORA:
+                          Uso de Radix UI para asegurar que el Dropdown esté siempre por encima (z-index)
+                          y no se vea afectado por el overflow del contenedor padre.
+                        */}
+                        <DropdownMenu.Root>
+                          <DropdownMenu.Trigger asChild>
+                            <button
                               className={cn(
-                                "absolute right-0 z-20 w-72 rounded-xl border border-slate-200 bg-white shadow-sm",
-                                openDirection === "down"
-                                  ? "top-full mt-2"
-                                  : "bottom-full mb-2",
+                                buttonVariants({
+                                  variant: "outline",
+                                  size: "sm",
+                                }),
+                                "h-8 px-3 rounded-lg text-[10px] uppercase font-bold select-none gap-2 data-[state=open]:bg-slate-50 data-[state=open]:border-slate-300 focus:outline-none",
                               )}
                             >
-                              <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100">
+                              <span className="inline-flex items-center gap-2">
+                                <span>Roles</span>
+                                <span className="text-slate-400">
+                                  ({user.roles.length})
+                                </span>
+                                <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+                              </span>
+                            </button>
+                          </DropdownMenu.Trigger>
+
+                          {/* El Portal saca el componente del flujo del DOM para que nada lo corte */}
+                          <DropdownMenu.Portal>
+                            <DropdownMenu.Content
+                              align="end"
+                              sideOffset={8}
+                              className="z-50 w-72 rounded-xl border border-slate-200 bg-white shadow-lg p-0 overflow-hidden animate-in fade-in zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
+                            >
+                              <div className="flex items-center justify-between px-3 py-2 border-b border-slate-100 bg-slate-50/50">
                                 <div className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                                   Asignar roles
                                 </div>
@@ -316,12 +257,14 @@ export function IAMPage() {
                                     <label
                                       key={role}
                                       className={cn(
-                                        "flex items-center justify-between gap-3 rounded-lg px-2 py-2 text-xs",
+                                        "flex items-center justify-between gap-3 rounded-lg px-2 py-2 text-xs transition-colors",
                                         isBusy
                                           ? "opacity-60 cursor-not-allowed"
                                           : "hover:bg-slate-50 cursor-pointer",
                                         checked && !isBusy && "bg-slate-50",
                                       )}
+                                      // Evitamos que al hacer click se cierre el dropdown inmediatamente
+                                      onClick={(e) => e.stopPropagation()}
                                     >
                                       <span className="font-semibold uppercase text-slate-700">
                                         {formatRoleLabel(role)}
@@ -329,7 +272,7 @@ export function IAMPage() {
 
                                       <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-slate-300 accent-brand-600"
+                                        className="h-4 w-4 rounded border-slate-300 accent-brand-600 focus:ring-brand-500"
                                         checked={checked}
                                         disabled={isBusy}
                                         onChange={() =>
@@ -341,12 +284,12 @@ export function IAMPage() {
                                 })}
                               </div>
 
-                              <div className="px-3 pb-3 pt-2 border-t border-slate-100 text-[10px] text-slate-400">
+                              <div className="px-3 pb-3 pt-2 border-t border-slate-100 text-[10px] text-slate-400 bg-slate-50/50">
                                 Selecciona uno o más roles.
                               </div>
-                            </div>
-                          )}
-                        </div>
+                            </DropdownMenu.Content>
+                          </DropdownMenu.Portal>
+                        </DropdownMenu.Root>
                       </td>
                     </tr>
                   ))}
