@@ -3,18 +3,36 @@ import { Layout } from "@/components/layout/Layout";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { type Route as SidebarRoute } from "@/components/layout/Sidebar";
+import { useAuth } from "@/hooks/useAuth";
 
 import { ListaOperacionesPage } from "@/pages/operaciones/ListarOperacionesPage";
 import { NewOperationPage } from "@/pages/nueva-operacion/NewOperationPage";
 import { EnvioCartasPage } from "@/pages/envio-cartas/EnvioCartasPage";
 import { SunatPage } from "@/pages/sunat/SunatPage";
 import { IAMPage } from "@/pages/iam/IAMPage";
+import { ShieldAlert } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
-//import { ProfilePage } from "@/pages/perfil/ProfilePage";
+// Pantalla para usuarios sin rol asignado
+function AccesoPendiente() {
+  return (
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-8rem)]">
+      <Card className="border-slate-200 shadow-sm p-12 flex flex-col items-center justify-center text-center max-w-md">
+        <ShieldAlert className="h-16 w-16 text-slate-300 mb-4" />
+        <h2 className="text-xl font-bold text-slate-700">Acceso Pendiente</h2>
+        <p className="text-slate-500 mt-2 text-sm">
+          Tu cuenta ha sido creada exitosamente, pero aún no tienes un rol asignado en el sistema.<br /><br />
+          Por favor, comunícate con un administrador para que te otorgue los permisos necesarios.
+        </p>
+      </Card>
+    </div>
+  );
+}
 
 export function AppRouter() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { authUser } = useAuth(); // Obtenemos el usuario
 
   const getCurrentRoute = (): SidebarRoute => {
     const path = location.pathname;
@@ -39,6 +57,8 @@ export function AppRouter() {
     navigate(paths[route as keyof typeof paths] || "/");
   };
 
+  const isSinAsignar = authUser?.rol === "sin_asignar";
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
@@ -47,7 +67,7 @@ export function AppRouter() {
       <Route element={<ProtectedRoute />}>
         <Route element={
           <Layout currentRoute={getCurrentRoute()} onNavigate={handleNavigateSidebar}>
-            <Outlet />
+            {isSinAsignar ? <AccesoPendiente /> : <Outlet />}
           </Layout>
         }>
           <Route path="/" element={<Navigate to="/operaciones" replace />} />
@@ -56,7 +76,6 @@ export function AppRouter() {
           <Route path="/envio-cartas" element={<EnvioCartasPage />} />
           <Route path="/sunat" element={<SunatPage />} />
           <Route path="/iam" element={<IAMPage />} />
-          {/* <Route path="/perfil" element={<ProfilePage />} /> */}
         </Route>
       </Route>
     </Routes>

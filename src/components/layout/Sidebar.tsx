@@ -16,7 +16,6 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 
-// 1. INTERFACES Y CONSTANTES
 export type Route =
   | "dashboard"
   | "operations"
@@ -35,23 +34,65 @@ interface SidebarProps {
 }
 
 const MENU_ITEMS = [
-  { id: "dashboard", label: "Dashboard General", icon: LayoutDashboard },
-  { id: "operations", label: "Mis Operaciones", icon: Briefcase },
-  { id: "new-operation", label: "Nueva Operación", icon: PlusCircle },
-  { id: "envio-cartas", label: "Envío de Cartas de Cesión", icon: Menu },
-  { id: "sunat", label: "Portal SUNAT", icon: FileBarChart },
-  { id: "profile", label: "Perfil y Scoring", icon: UserCircle },
-  { id: "iam", label: "Gestión de Acceso (IAM)", icon: Shield },
+  {
+    id: "dashboard",
+    label: "Dashboard General",
+    icon: LayoutDashboard,
+    roles: ["admin", "ventas", "gestion"],
+  },
+  {
+    id: "operations",
+    label: "Mis Operaciones",
+    icon: Briefcase,
+    roles: ["admin", "ventas", "gestion"],
+  },
+  {
+    id: "new-operation",
+    label: "Nueva Operación",
+    icon: PlusCircle,
+    roles: ["admin", "ventas", "gestion"],
+  },
+  {
+    id: "envio-cartas",
+    label: "Envío de Cartas de Cesión",
+    icon: Menu,
+    roles: ["admin", "ventas","gestion"],
+  },
+  {
+    id: "sunat",
+    label: "Portal SUNAT",
+    icon: FileBarChart,
+    roles: ["admin", "ventas", "gestion"],
+  },
+  {
+    id: "profile",
+    label: "Perfil y Scoring",
+    icon: UserCircle,
+    roles: ["admin", "ventas", "gestion", "sin_asignar"],
+  },
+  {
+    id: "iam",
+    label: "Gestión de Acceso (IAM)",
+    icon: Shield,
+    roles: ["admin"],
+  },
 ] as const;
 
-// 2. COMPONENTE
 export function Sidebar({
   currentRoute,
   onNavigate,
   isCollapsed,
   onToggleCollapse,
 }: SidebarProps) {
-  const { logout } = useAuth();
+  const { logout, authUser } = useAuth();
+
+  // 2. Obtenemos el rol del usuario (por defecto sin_asignar por seguridad)
+  const userRole = authUser?.rol || "sin_asignar";
+
+  // 3. Filtramos el menú para que solo vea lo que su rol permite
+  const visibleItems = MENU_ITEMS.filter((item) =>
+    item.roles.includes(userRole),
+  );
 
   return (
     <aside
@@ -60,7 +101,6 @@ export function Sidebar({
         isCollapsed ? "w-20" : "w-72",
       )}
     >
-      {/* Brand & Toggle */}
       <div
         className={cn(
           "p-4 flex items-center",
@@ -90,9 +130,9 @@ export function Sidebar({
         </Button>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 px-3 space-y-1 mt-2 overflow-y-auto hide-scrollbar">
-        {MENU_ITEMS.map((item) => {
+        {/* Iteramos sobre visibleItems en lugar de MENU_ITEMS */}
+        {visibleItems.map((item) => {
           const isActive =
             currentRoute === item.id ||
             (currentRoute === "operation-detail" && item.id === "operations");
@@ -137,7 +177,6 @@ export function Sidebar({
         })}
       </nav>
 
-      {/* Footer */}
       <div className="p-4 mt-auto border-t border-slate-100">
         <button
           onClick={logout}

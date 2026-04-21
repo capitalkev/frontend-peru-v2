@@ -3,14 +3,19 @@ import { Header } from "@/components/layout/Header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, ShieldAlert } from "lucide-react";
 import { IAMService } from "@/features/iam/service/iam.service";
 import { AVAILABLE_ROLES } from "@/features/iam/types";
 import type { IAMUser, Role } from "@/features/iam/types";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth"; // <-- Importamos useAuth
 
 export function IAMPage() {
+  // 1. Obtenemos el usuario actual y verificamos si es admin
+  const { authUser } = useAuth();
+  const isAdmin = authUser?.rol === "admin";
+
   const [users, setUsers] = useState<IAMUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +27,7 @@ export function IAMPage() {
   const triggerRefs = useRef(new Map<string, HTMLButtonElement | null>());
 
   const loadUsers = async () => {
+    if (!isAdmin) return; // Si no es admin, no hacemos la petición al backend
     try {
       setLoading(true);
       const data = await IAMService.listUsers();
@@ -37,6 +43,11 @@ export function IAMPage() {
     let active = true;
 
     const load = async () => {
+      // 2. Bloqueamos la petición inicial si no tiene permisos
+      if (!isAdmin) {
+        if (active) setLoading(false);
+        return;
+      }
       try {
         const data = await IAMService.listUsers();
         if (active) setUsers(data);
@@ -51,7 +62,7 @@ export function IAMPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [isAdmin]); // <-- Agregamos isAdmin a las dependencias
 
   const formatRoleLabel = (role: string) => role.replaceAll("_", " ");
 
@@ -64,14 +75,15 @@ export function IAMPage() {
         if (hasRole) {
           await IAMService.removeRole(user.username, role);
         } else {
-          const rolesToRemove = user.roles.filter((r): r is Role =>
-            (AVAILABLE_ROLES as readonly string[]).includes(r) && r !== "sin_asignar",
+          const rolesToRemove = user.roles.filter(
+            (r): r is Role =>
+              (AVAILABLE_ROLES as readonly string[]).includes(r) &&
+              r !== "sin_asignar",
           );
 
           for (const r of rolesToRemove) {
             await IAMService.removeRole(user.username, r);
           }
-
           await IAMService.assignRole(user.username, role);
         }
       } else {
@@ -84,7 +96,6 @@ export function IAMPage() {
           await IAMService.assignRole(user.username, role);
         }
       }
-
       await loadUsers();
     } catch (err: unknown) {
       console.error(err);
@@ -100,19 +111,14 @@ export function IAMPage() {
 
   useEffect(() => {
     if (!openUser) return;
-
     const onPointerDown = (event: MouseEvent) => {
       const container = containerRefs.current.get(openUser);
       if (!container) return;
-      if (!container.contains(event.target as Node)) {
-        setOpenUser(null);
-      }
+      if (!container.contains(event.target as Node)) setOpenUser(null);
     };
-
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpenUser(null);
     };
-
     document.addEventListener("mousedown", onPointerDown, true);
     document.addEventListener("keydown", onKeyDown);
     return () => {
@@ -126,7 +132,6 @@ export function IAMPage() {
       setOpenUser(null);
       return;
     }
-
     const trigger = triggerRefs.current.get(username);
     if (trigger) {
       const rect = trigger.getBoundingClientRect();
@@ -137,10 +142,32 @@ export function IAMPage() {
     } else {
       setOpenDirection("down");
     }
-
     setOpenUser(username);
   };
 
+  // 3. VISTA "VACÍA" PARA USUARIOS SIN PERMISOS
+  if (!isAdmin) {
+    return (
+      <div className="space-y-6">
+        <Header title="Gestión de Acceso (IAM)" />
+        <Card className="border-slate-200 shadow-sm p-12 flex flex-col items-center justify-center text-center mt-10">
+          <ShieldAlert className="h-16 w-16 text-slate-300 mb-4" />
+          <h2 className="text-xl font-bold text-slate-700">
+            Acceso Restringido
+          </h2>
+          <p className="text-slate-500 mt-2 text-sm max-w-sm">
+            Tu cuenta actual tiene el rol{" "}
+            <strong>{formatRoleLabel(authUser?.rol || "sin rol")}</strong> y no
+            cuenta con permisos de administrador. <br />
+            <br />
+            No puedes visualizar ni modificar los accesos de otros usuarios.
+          </p>
+        </Card>
+      </div>
+    );
+  }
+
+  // 4. VISTA NORMAL (Para administradores)
   return (
     <div className="space-y-6">
       <Header title="Gestión de Acceso (IAM)" />
@@ -159,6 +186,7 @@ export function IAMPage() {
       <Card className="border-slate-200 shadow-sm overflow-visible">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-left border-collapse">
+            {/* ... Todo el resto del contenido de la tabla queda exactamente igual ... */}
             <thead>
               <tr className="bg-slate-50/50 border-b border-slate-100">
                 <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -239,7 +267,10 @@ export function IAMPage() {
                             aria-expanded={openUser === user.username}
                             onClick={() => toggleDropdownFor(user.username)}
                             className={cn(
-                              buttonVariants({ variant: "outline", size: "sm" }),
+                              buttonVariants({
+                                variant: "outline",
+                                size: "sm",
+                              }),
                               "h-8 px-3 rounded-lg text-[10px] uppercase font-bold select-none",
                               "gap-2",
                               openUser === user.username &&
@@ -278,7 +309,8 @@ export function IAMPage() {
                                 {AVAILABLE_ROLES.map((role) => {
                                   const checked = user.roles.includes(role);
                                   const isBusy =
-                                    actionLoading === `${user.username}-${role}`;
+                                    actionLoading ===
+                                    `${user.username}-${role}`;
 
                                   return (
                                     <label
@@ -300,7 +332,9 @@ export function IAMPage() {
                                         className="h-4 w-4 rounded border-slate-300 accent-brand-600"
                                         checked={checked}
                                         disabled={isBusy}
-                                        onChange={() => handleToggleRole(user, role)}
+                                        onChange={() =>
+                                          handleToggleRole(user, role)
+                                        }
                                       />
                                     </label>
                                   );
