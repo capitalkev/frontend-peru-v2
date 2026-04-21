@@ -2,6 +2,7 @@ import { Routes, Route, useNavigate, useLocation, Outlet, Navigate } from "react
 import { Layout } from "@/components/layout/Layout";
 import { LoginPage } from "@/pages/auth/LoginPage";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { RoleGuard } from "./RoleGuard";
 import { type Route as SidebarRoute } from "@/components/layout/Sidebar";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -71,11 +72,20 @@ export function AppRouter() {
           </Layout>
         }>
           <Route path="/" element={<Navigate to="/operaciones" replace />} />
-          <Route path="/operaciones" element={<ListaOperacionesPage />} />
-          <Route path="/nueva-operacion" element={<NewOperationPage />} />
-          <Route path="/envio-cartas" element={<EnvioCartasPage />} />
-          <Route path="/sunat" element={<SunatPage />} />
-          <Route path="/iam" element={<IAMPage />} />
+          
+          {/* Rutas compartidas (ej. admin, ventas, gestion) */}
+          <Route element={<RoleGuard allowedRoles={["admin", "ventas", "gestion"]} />}>
+            <Route path="/operaciones" element={<ListaOperacionesPage />} />
+            <Route path="/nueva-operacion" element={<NewOperationPage />} />
+            <Route path="/envio-cartas" element={<EnvioCartasPage />} />
+            <Route path="/sunat" element={<SunatPage />} />
+          </Route>
+
+          {/* Rutas exclusivas para admin */}
+          <Route element={<RoleGuard allowedRoles={["admin"]} />}>
+            <Route path="/iam" element={<IAMPage />} />
+          </Route>
+
         </Route>
       </Route>
     </Routes>
