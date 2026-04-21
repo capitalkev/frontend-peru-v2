@@ -6,6 +6,6 @@ export interface IAMUser {
   roles: string[];
 }
 
-export const AVAILABLE_ROLES = ["admin", "gestion", "sin_asignar", "ventas"] as const;
+export const AVAILABLE_ROLES = ["admin", "gestion", "ventas"] as const;
 
 export type Role = (typeof AVAILABLE_ROLES)[number];

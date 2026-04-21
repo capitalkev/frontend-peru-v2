@@ -66,30 +66,12 @@ export function IAMPage() {
     setActionLoading(`${user.username}-${role}`);
 
     try {
-      if (role === "sin_asignar") {
-        if (hasRole) {
-          await IAMService.removeRole(user.username, role);
-        } else {
-          const rolesToRemove = user.roles.filter(
-            (r): r is Role => r !== "sin_asignar"
-          );
-          
-          for (const r of rolesToRemove) {
-            await IAMService.removeRole(user.username, r);
-          }
-          await IAMService.assignRole(user.username, role);
-        }
+      if (hasRole) {
+        await IAMService.removeRole(user.username, role);
       } else {
-        if (hasRole) {
-          await IAMService.removeRole(user.username, role);
-        } else {
-          if (user.roles.includes("sin_asignar")) {
-             await IAMService.removeRole(user.username, "sin_asignar");
-          }
-          await IAMService.assignRole(user.username, role);
-        }
+        await IAMService.assignRole(user.username, role);
       }
-      
+
       await loadUsers();
     } catch (err: unknown) {
       console.error(err);
@@ -180,25 +162,23 @@ export function IAMPage() {
 
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1.5">
-                          {user.roles.map((r) => (
+                          {user.roles.length > 0 ? (
+                            user.roles.map((r) => (
+                              <Badge
+                                key={r}
+                                variant={r === "admin" ? "danger" : "info"}
+                                className="uppercase text-[10px] tracking-wide"
+                              >
+                                {formatRoleLabel(r)}
+                              </Badge>
+                            ))
+                          ) : (
                             <Badge
-                              key={r}
-                              variant={
-                                r === "admin"
-                                  ? "danger"
-                                  : r === "sin_asignar"
-                                    ? "secondary"
-                                    : "info"
-                              }
+                              variant="secondary"
                               className="uppercase text-[10px] tracking-wide"
                             >
-                              {formatRoleLabel(r)}
+                              SIN ASIGNAR
                             </Badge>
-                          ))}
-                          {user.roles.length === 0 && (
-                            <span className="text-xs text-slate-400 italic">
-                              Sin roles
-                            </span>
                           )}
                         </div>
                       </td>

@@ -34,7 +34,7 @@ export function Sidebar({
 }: SidebarProps) {
   const { logout, authUser } = useAuth();
 
-  const userRoles = authUser?.roles || ["sin_asignar"];
+  const userRoles = authUser?.roles || [];
   const visibleItems = ROUTES_CONFIG.filter(
     (item) =>
       item.showInSidebar && item.roles.some((role) => userRoles.includes(role)),

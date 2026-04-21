@@ -92,7 +92,7 @@ export function AppRouter() {
     if (route) navigate(route.path);
   };
 
-  const isSinAsignar = !authUser?.roles || authUser.roles.length === 0;
+  const hasNoRoles = !authUser?.roles || authUser.roles.length === 0;
 
   return (
     <Routes>
@@ -106,7 +106,7 @@ export function AppRouter() {
               currentRoute={getCurrentRoute()}
               onNavigate={handleNavigateSidebar}
             >
-              {isSinAsignar ? (
+              {hasNoRoles ? (
                 <AccesoPendiente />
               ) : (
                 <Suspense fallback={<PageLoader />}>

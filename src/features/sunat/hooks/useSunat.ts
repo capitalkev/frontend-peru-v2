@@ -13,7 +13,7 @@ export function useSunatUsers(isAuthenticated: boolean, isAdmin: boolean) {
           data.map((u: any) => ({
             email: u.email,
             nombre: u.email,
-            rol: u.roles && u.roles.length > 0 ? u.roles[0] : "sin_asignar",
+            rol: u.roles && u.roles.length > 0 ? u.roles[0] : undefined,
           })),
         ),
       )
